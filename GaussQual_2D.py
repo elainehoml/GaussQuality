@@ -11,6 +11,9 @@ from GaussQual_2D_cli import GaussQual_parser
 def main():
     args = GaussQual_parser().parse_args()
     
+    if args.n_components is None:
+        raise ValueError("Please specify number of Gaussians to fit")
+
     img = GaussQual_io.load_img(
         args.img_filepath,
         mask_percentage=args.mask_percentage
