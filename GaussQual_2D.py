@@ -38,6 +38,8 @@ def main():
     if args.calculate:
         if (args.background is None) or (args.feature is None):
             raise TypeError("Background and feature Gaussians must be specified as integers")
+        if (args.background > len(mu)) or (args.feature > len(mu)):
+            raise ValueError("Background and feature must be between 0 and {}".format(len(mu)))
         SNR = GaussQual_calc.calc_snr(
             mu[args.feature],
             sigma[args.background])
