@@ -1,14 +1,13 @@
-from argparse import (
-    ArgumentParser,
-    ArgumentDefaultsHelpFormatter
-)
+from argparse import ArgumentParser
 
 
 def GaussQual_parser():
-    parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
+    parser = ArgumentParser(
+        description="Assess quality of 2D greyscale images with Gaussian Mixture Models"
+    )
     parser.add_argument(
-        "-s",
-        "--single-image",
+        "-f",
+        "--img_filepath",
         dest="img_filepath",
         type=str,
         help="Path to the single image to be analysed"
@@ -55,6 +54,25 @@ def GaussQual_parser():
         dest="material_names",
         default=None,
         help="List of material names in ascending order of grey value mu, input as a single string separated by spaces e.g. `Air Tissue Wax`"
+    )
+    parser.add_argument(
+        "-c",
+        "--calc",
+        dest="calculate",
+        action="store_true",
+        help="Calculate SNR and CNR"
+    )
+    parser.add_argument(
+        "--background",
+        dest="background",
+        type=int,
+        help="Index of background Gaussian, e.g. 0 is the Gaussian with lowest mean grey value."    
+    )
+    parser.add_argument(
+        "--feature",
+        dest="feature",
+        type=int,
+        help="Index of feature Gaussian, e.g. 0 is the Gaussian with the lowest mean grey value"
     )
 
     return parser

@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import GaussQual_io
 import GaussQual_fitting
 import GaussQual_visuals
+import GaussQual_calc
 from GaussQual_2D_cli import GaussQual_parser
 
 
@@ -34,6 +35,23 @@ def main():
                 img, mu, sigma, phi, threshold=args.threshold
             )
         plt.show()
+    if args.calculate:
+        if (args.background is None) or (args.feature is None):
+            raise TypeError("Background and feature Gaussians must be specified as integers")
+        SNR = GaussQual_calc.calc_snr(
+            mu[args.feature],
+            sigma[args.background])
+        CNR = GaussQual_calc.calc_cnr(
+            mu[args.feature],
+            mu[args.background],
+            sigma[args.background]
+        )
+        print("SNR is {}, CNR is {}, with background {} and feature {}".format(
+            SNR,
+            CNR,
+            args.background,
+            args.feature
+        ))
 
 
 if __name__ == "__main__":
