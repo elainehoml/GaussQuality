@@ -23,7 +23,8 @@ def main():
     )
     if args.plot_histo:
         if args.material_names is not None:
-            material_names=args.material_names.split(" ")
+            # material_names=args.material_names.split(" ")
+            material_names=args.material_names
             if len(material_names) != len(mu):
                 raise ValueError("Incorrect number of material names passed, should be {}".format(len(mu)))
             GaussQual_visuals.plot_GMM(

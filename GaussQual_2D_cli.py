@@ -53,8 +53,8 @@ def GaussQual_parser():
         "--material_names",
         dest="material_names",
         default=None,
-        help="List of material names in ascending order of grey value mu, \
-            input as a single string separated by spaces e.g. `Air Tissue Wax`"
+        nargs="*",
+        help="List of material names in ascending order of grey value mu, encased in """
     )
     parser.add_argument(
         "-c",
@@ -68,14 +68,16 @@ def GaussQual_parser():
         dest="background",
         type=int,
         nargs="*",
-        help="Index of background Gaussian, e.g. 0 is the Gaussian with lowest mean grey value."    
+        help="Index of background Gaussian, e.g. 0 is the Gaussian with lowest mean grey value, \
+            can specify more than one"    
     )
     parser.add_argument(
         "--feature",
         dest="feature",
         type=int,
         nargs="*",
-        help="Index of feature Gaussian, e.g. 0 is the Gaussian with the lowest mean grey value"
+        help="Index of feature Gaussian, e.g. 0 is the Gaussian with the lowest mean grey value, \
+            can specify more than 1."
     )
     parser.add_argument(
         "-s",
