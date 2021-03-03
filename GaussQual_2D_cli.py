@@ -44,10 +44,20 @@ def GaussQual_parser():
     )
     parser.add_argument(
         "-p",
-        "--plot_histo",
-        dest="plot_histo",
+        "--plots",
+        dest="plots",
+        default=0,
+        action="count",
+        help="Plot nothing (0) \
+              Plot histogram alone (1), \
+              Plot image and histogram side-by-side (2) \
+              Plot both (3)"
+    )
+    parser.add_argument(
+        "--show_plots",
+        dest="show_plots",
         action="store_true",
-        help="Show histogram"
+        help="Show plots"
     )
     parser.add_argument(
         "--material_names",

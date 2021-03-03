@@ -133,7 +133,7 @@ def plot_slice_variation(fitted_results, iter_results, material_names):
     plt.tight_layout()
 
 
-def plot_img_and_histo(img_dir, prefix, slice_number, mask_percentage,
+def plot_img_and_histo(img_filepath, mask_percentage,
                        fitted_results, threshold=None, material_names=None):
     """
     Plots imported image and histogram with overlaid fitted Gaussian
@@ -141,12 +141,8 @@ def plot_img_and_histo(img_dir, prefix, slice_number, mask_percentage,
 
     Parameters
     ----------
-    img_dir : str, path-like
-        Directory to image.
-    prefix : str
-        Name of the image.
-    slice_number : int
-        Int between 0 and 10000 which represents slice number.
+    img_filepath : str, path-like
+        Filepath to image
     mask_percentage : float
         Percentage of the image to consider, as a rectangle centred on `img`.
         Ranges from 0-100.
@@ -164,9 +160,7 @@ def plot_img_and_histo(img_dir, prefix, slice_number, mask_percentage,
     None.
 
     """
-
-    img_filepath = get_img_filepath(img_dir, prefix, slice_number)
-
+    
     plt.figure()
     plt.subplot(121)
     img = load_img(img_filepath,

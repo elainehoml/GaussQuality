@@ -21,9 +21,14 @@ def main():
         mu_init=args.mu_init,
         threshold=args.threshold
     )
-    if args.plot_histo:
+
+    if args.plots > 0:
+        if (not args.show_plots) and (args.save_results<2):
+            print("Warning, plots have been generated but not shown or saved. \
+                Specify --show_plots to show plots or -ss to save plots")
+
+    if (args.plots == 1) or (args.plots == 3):
         if args.material_names is not None:
-            # material_names=args.material_names.split(" ")
             material_names=args.material_names
             if len(material_names) != len(mu):
                 raise ValueError("Incorrect number of material names passed, should be {}".format(len(mu)))
@@ -39,7 +44,41 @@ def main():
             GaussQual_visuals.plot_GMM(
                 img, mu, sigma, phi, threshold=args.threshold
             )
-        plt.show()
+    
+        if args.show_plots:
+            plt.show()
+
+        if args.save_results>=2:
+            plt.savefig(os.path.splitext(args.img_filepath)[0] + "_histogram.png")
+            print("Histogram saved to {}_histogram.png".format(os.path.splitext(args.img_filepath)[0]))
+    
+    if (args.plots == 2) or (args.plots == 3):
+        if args.material_names is not None:
+            material_names=args.material_names
+            if len(material_names) != len(mu):
+                raise ValueError("Incorrect number of material names passed, should be {}".format(len(mu)))
+            GaussQual_visuals.plot_img_and_histo(
+                args.img_filepath,
+                args.mask_percentage,
+                [mu, sigma, phi],
+                threshold=args.threshold,
+                material_names=args.material_names
+            )
+
+        else:
+            GaussQual_visuals.plot_img_and_histo(
+                args.img_filepath, args.mask_percentage, [mu, sigma, phi], args.threshold
+            )
+
+        if args.show_plots:
+            plt.show()
+        
+        if args.save_results>=2:
+            plt.savefig(os.path.splitext(args.img_filepath)[0] + "_img_and_histogram.png")
+            print("Image and histogram side-by-side saved to {}_img_and_histogram.png".format(
+                os.path.splitext(args.img_filepath)[0]
+            ))
+
     if args.calculate:
         # Dicts to hold SNRs and CNRs
         SNRs = {}
@@ -88,6 +127,7 @@ def main():
                 os.path.dirname(args.img_filepath),
                 os.path.splitext(os.path.basename(args.img_filepath))[0]
             )
+        print("Results saved to {}_GMM_results.json".format(os.path.splitext(args.img_filepath)[0]))
 
 if __name__ == "__main__":
     main()
