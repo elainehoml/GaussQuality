@@ -1,3 +1,4 @@
+import os
 import matplotlib.pyplot as plt
 
 import GaussQual_io
@@ -10,9 +11,8 @@ from GaussQual_2D_cli import GaussQual_parser
 def main():
     args = GaussQual_parser().parse_args()
     
-    img_filepath = args.img_filepath
     img = GaussQual_io.load_img(
-        img_filepath,
+        args.img_filepath,
         mask_percentage=args.mask_percentage
     )
     mu, sigma, phi = GaussQual_fitting.fit_GMM(
@@ -58,7 +58,21 @@ def main():
             args.background,
             args.feature
         ))
-
+    if args.save_results >= 1:
+        if args.calculate:
+            GaussQual_io.save_GMM_single_results(
+                [mu, sigma, phi],
+                os.path.dirname(args.img_filepath),
+                os.path.splitext(os.path.basename(args.img_filepath))[0],
+                SNR,
+                CNR
+            )
+        else:
+            GaussQual_io.save_GMM_single_results(
+                [mu, sigma, phi],
+                os.path.dirname(args.img_filepath),
+                os.path.splitext(os.path.basename(args.img_filepath))[0]
+            )
 
 if __name__ == "__main__":
     main()

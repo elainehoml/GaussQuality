@@ -53,7 +53,8 @@ def GaussQual_parser():
         "--material_names",
         dest="material_names",
         default=None,
-        help="List of material names in ascending order of grey value mu, input as a single string separated by spaces e.g. `Air Tissue Wax`"
+        help="List of material names in ascending order of grey value mu, \
+            input as a single string separated by spaces e.g. `Air Tissue Wax`"
     )
     parser.add_argument(
         "-c",
@@ -73,6 +74,15 @@ def GaussQual_parser():
         dest="feature",
         type=int,
         help="Index of feature Gaussian, e.g. 0 is the Gaussian with the lowest mean grey value"
+    )
+    parser.add_argument(
+        "-s",
+        "--save_results",
+        dest="save_results",
+        action="count",
+        default=0,
+        help="Save results. Use -s to save fitted results, -ss to save plots. \
+            If -s is called and SNR and CNR are calculated that will be saved too."
     )
 
     return parser

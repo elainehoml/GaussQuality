@@ -135,7 +135,7 @@ def load_img(img_filepath, show_image=False, mask_percentage=100.):
     return masked_img
 
 
-def save_GMM_single_results(fitted_results, img_dir, prefix):
+def save_GMM_single_results(fitted_results, img_dir, prefix, SNR=None, CNR=None):
     """
     Saves average fitted Gaussian properties across the stack.
 
@@ -148,6 +148,10 @@ def save_GMM_single_results(fitted_results, img_dir, prefix):
         Directory to image.
     prefix : str
         Name of the image.
+    SNR : array-like, optional.
+        SNR. Default is None.
+    CNR : array-like, optional.
+        CNR. Default is None.
 
     Returns
     -------
@@ -168,9 +172,12 @@ def save_GMM_single_results(fitted_results, img_dir, prefix):
             "sigma_mean": sigma_mean[material],
             "phi_mean": phi_mean[material]
         })
+    if (SNR is not None) and (CNR is not None):
+        dict_to_write["SNR"] = SNR
+        dict_to_write["CNR"] = CNR
 
     with open(save_single_filename, "w") as outfile:
-        json.dump(dict_to_write, outfile)
+        json.dump(dict_to_write, outfile, indent=4)
 
 
 def save_GMM_slice_results(iter_results, img_dir, prefix):
