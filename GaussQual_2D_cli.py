@@ -67,12 +67,14 @@ def GaussQual_parser():
         "--background",
         dest="background",
         type=int,
+        nargs="*",
         help="Index of background Gaussian, e.g. 0 is the Gaussian with lowest mean grey value."    
     )
     parser.add_argument(
         "--feature",
         dest="feature",
         type=int,
+        nargs="*",
         help="Index of feature Gaussian, e.g. 0 is the Gaussian with the lowest mean grey value"
     )
     parser.add_argument(

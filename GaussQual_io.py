@@ -148,9 +148,9 @@ def save_GMM_single_results(fitted_results, img_dir, prefix, SNR=None, CNR=None)
         Directory to image.
     prefix : str
         Name of the image.
-    SNR : array-like, optional.
+    SNR : dict, optional.
         SNR. Default is None.
-    CNR : array-like, optional.
+    CNR : dict, optional.
         CNR. Default is None.
 
     Returns

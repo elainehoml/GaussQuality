@@ -40,32 +40,46 @@ def main():
             )
         plt.show()
     if args.calculate:
+        # Dicts to hold SNRs and CNRs
+        SNRs = {}
+        CNRs = {}
+
+        # Tests
         if (args.background is None) or (args.feature is None):
             raise TypeError("Background and feature Gaussians must be specified as integers")
-        if (args.background > len(mu)) or (args.feature > len(mu)):
-            raise ValueError("Background and feature must be between 0 and {}".format(len(mu)))
-        SNR = GaussQual_calc.calc_snr(
-            mu[args.feature],
-            sigma[args.background])
-        CNR = GaussQual_calc.calc_cnr(
-            mu[args.feature],
-            mu[args.background],
-            sigma[args.background]
-        )
-        print("SNR is {}, CNR is {}, with background {} and feature {}".format(
-            SNR,
-            CNR,
-            args.background,
-            args.feature
-        ))
+        if len(args.background) != len(args.feature):
+            raise ValueError("Same number of background and feature Gaussians required. \
+                you have {} background and {} feature".format(
+                    len(args.background), len(args.feature)
+                ))
+
+        for i in range(len(args.background)):
+            if (args.background[i] > len(mu)) or (args.feature[i] > len(mu)):
+                raise ValueError("Background and feature must be between 0 and {}".format(len(mu)))
+            SNR = GaussQual_calc.calc_snr(
+                mu[args.feature[i]],
+                sigma[args.background[i]])
+            CNR = GaussQual_calc.calc_cnr(
+                mu[args.feature[i]],
+                mu[args.background[i]],
+                sigma[args.background[i]]
+            )
+            print("SNR is {}, CNR is {}, with background {} and feature {}".format(
+                SNR,
+                CNR,
+                args.background[i],
+                args.feature[i]
+            ))
+            SNRs["{}-{}".format(args.background[i], args.feature[i])] = SNR
+            CNRs["{}-{}".format(args.background[i], args.feature[i])] = CNR
     if args.save_results >= 1:
         if args.calculate:
             GaussQual_io.save_GMM_single_results(
                 [mu, sigma, phi],
                 os.path.dirname(args.img_filepath),
                 os.path.splitext(os.path.basename(args.img_filepath))[0],
-                SNR,
-                CNR
+                SNRs,
+                CNRs
             )
         else:
             GaussQual_io.save_GMM_single_results(
