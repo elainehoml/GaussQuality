@@ -50,5 +50,36 @@ def GaussQual3D_parser():
         type=float,
         help="Min and Max grey values to consider, optional. Default uses entire range."
     )
+    parser.add_argument(
+        "-p",
+        "--plots",
+        dest="plots",
+        action="store_true",
+        help="Plot slice variation. To plot histogram and others please use GaussQual_2D."    
+    )
+    parser.add_argument(
+        "--material_names",
+        dest="material_names",
+        default=None,
+        nargs="*",
+        help="List of material names in ascending order of grey value mu"
+    )
+    parser.add_argument(
+        "--show_plots",
+        dest="show_plots",
+        action="store_true",
+        help="Show plots in interactive window"
+    )
+    parser.add_argument(
+        "-s",
+        "--save_results",
+        dest="save_results",
+        action="count",
+        default=0,
+        help="Save results. Save nothing (0) \
+              Save input arguments (1), \
+              Save input arguments, fitted results (2), \
+              Save input arguments, fitted results, and plots (3)"
+    )
 
     return parser

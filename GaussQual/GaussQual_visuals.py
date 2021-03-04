@@ -82,7 +82,7 @@ def plot_GMM(img, mu_fitted, sigma_fitted, phi_fitted, plot_title=None,
 
 
 # Plot the variation of sigma across slices
-def plot_slice_variation(fitted_results, iter_results, material_names):
+def plot_slice_variation(fitted_results, iter_results, material_names=None):
     """
     Plot fitted `mu`, `sigma` and `phi` distributions over the stack slices
 
@@ -94,7 +94,7 @@ def plot_slice_variation(fitted_results, iter_results, material_names):
     iter_results : list
         List containing fitted Gaussian properties for each 2-D image
         considered.
-    material_names : list
+    material_names : list, default None.
         List containing material names, e.g. "air".
 
     Returns
@@ -107,7 +107,10 @@ def plot_slice_variation(fitted_results, iter_results, material_names):
     mus, sigmas, phis = iter_results
 
     # Plot variation of mu across slices
-    plt.figure()
+    plt.figure(figsize=(6,3))
+
+    if material_names is None:
+        material_names = ["Gaussian {}".format(i) for i in range(len(mu_fitted))]
 
     def subplot(plot_no, fitted, means, material_names):
         plt.subplot(1, 3, plot_no + 1)
