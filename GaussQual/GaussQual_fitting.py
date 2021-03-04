@@ -55,7 +55,8 @@ def fit_GMM(img, n_components, mu_init=None, threshold=None):
     if threshold is not None:
         img = np.array(list(filter(lambda x: x >= threshold[0], img.flatten())))
         img = np.array(list(filter(lambda x: x <= threshold[1], img)))
-
+    print("Image grey value range = {}-{}".format(
+        min(img.flatten()), max(img.flatten())))
     # Fit 1D array of image grey values
     GMM_model.fit(img.reshape(-1, 1))
 

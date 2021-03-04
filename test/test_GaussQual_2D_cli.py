@@ -52,5 +52,22 @@ def test_mask_percentage():
     ])
     fullsize_x, fullsize_y = stdout[1].split(" = ")[1][1:-3].split(", ")
     masked_x, masked_y = stdout[2].split(" = ")[1][1:-3].split(", ")
-    assert (int(masked_x) / int(fullsize_x)) == approx(0.2, rel=0.05)
- 
+    assert ((int(masked_x) / int(fullsize_x)) == approx(0.2, rel=0.05)) and ((int(masked_y) / int(fullsize_y)) == approx(0.2, rel=0.05))
+
+
+def test_threshold():
+    # Check that threshold is applied correctly
+    stdout, stderr, returncode = run_GaussQual_2D([
+    'python',
+    'GaussQual/GaussQual_2D.py',
+    '-f',
+    'test/example_images/3D_/3D_00.tif',
+    '-n',
+    '3',
+    '-t',
+    '5',
+    '100'
+    ])
+    min_gv, max_gv = stdout[3].split(" = ")[1].split("-")
+    assert (int(min_gv) == 5) and (int(max_gv[:-2]) == 100)
+

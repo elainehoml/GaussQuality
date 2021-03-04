@@ -31,7 +31,6 @@ def main():
         mu_init=args.mu_init,
         threshold=args.threshold
     )
-
     if args.plots > 0:
         if (not args.show_plots) and (args.save_results<2):
             print("Warning, plots have been generated but not shown or saved. \
