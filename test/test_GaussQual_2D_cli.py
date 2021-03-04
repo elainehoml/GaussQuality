@@ -2,6 +2,7 @@ import subprocess
 import os
 import numpy as np
 from pytest import approx
+from datetime import date
 
 test_dir = os.path.dirname(os.path.abspath(__file__))
 base_dir = os.path.dirname(test_dir)
@@ -70,4 +71,29 @@ def test_threshold():
     ])
     min_gv, max_gv = stdout[3].split(" = ")[1].split("-")
     assert (int(min_gv) == 5) and (int(max_gv[:-2]) == 100)
+
+
+def test_save_results():
+    # Check that all results are saved
+    stdout, stderr, returncode = run_GaussQual_2D([
+    'python',
+    'GaussQual/GaussQual_2D.py',
+    '-f',
+    'test/example_images/3D_/3D_00.tif',
+    '-n',
+    '3',
+    '-ppp',
+    '-sss'
+    ])    
+    today = date.today().strftime("%Y%m%d")
+    prefix = "test/example_images/3D_/3D_00_"
+    assert (
+        os.path.isfile("{}{}_GMM_results.json".format(
+        prefix, today)) == True) and (
+        os.path.isfile("{}histogram_{}.png".format(
+            prefix, today)) == True) and (
+        os.path.isfile("{}img_and_histogram_{}.png".format(
+            prefix, today)) == True) and (
+        os.path.isfile("{}input_{}.json".format(
+            prefix, today)) == True)
 

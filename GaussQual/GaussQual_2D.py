@@ -1,5 +1,7 @@
 import os
 import matplotlib.pyplot as plt
+from datetime import date
+import json
 
 import GaussQual_io
 import GaussQual_fitting
@@ -58,8 +60,11 @@ def main():
             plt.show()
 
         if args.save_results>=2:
-            plt.savefig(os.path.splitext(args.img_filepath)[0] + "_histogram.png")
-            print("Histogram saved to {}_histogram.png".format(os.path.splitext(args.img_filepath)[0]))
+            plt.savefig(os.path.splitext(args.img_filepath)[0] + "_histogram_" + date.today().strftime("%Y%m%d") + ".png")
+            print("Histogram saved to {}_histogram_{}.png".format(
+                os.path.splitext(args.img_filepath)[0],
+                date.today().strftime("%Y%m%d")
+            ))
     
     if (args.plots == 2) or (args.plots == 3):
         if args.material_names is not None:
@@ -83,9 +88,10 @@ def main():
             plt.show()
         
         if args.save_results>=2:
-            plt.savefig(os.path.splitext(args.img_filepath)[0] + "_img_and_histogram.png")
-            print("Image and histogram side-by-side saved to {}_img_and_histogram.png".format(
-                os.path.splitext(args.img_filepath)[0]
+            plt.savefig(os.path.splitext(args.img_filepath)[0] + "_img_and_histogram_" + date.today().strftime("%Y%m%d") + ".png")
+            print("Image and histogram side-by-side saved to {}_img_and_histogram_{}.png".format(
+                os.path.splitext(args.img_filepath)[0],
+                date.today().strftime("%Y%m%d")
             ))
 
     if args.calculate:
@@ -122,11 +128,19 @@ def main():
             SNRs["{}-{}".format(args.background[i], args.feature[i])] = SNR
             CNRs["{}-{}".format(args.background[i], args.feature[i])] = CNR
     if args.save_results >= 1:
+
+        # Save input args
+        args_filename = os.path.splitext(args.img_filepath)[0] + "_input_" + date.today().strftime("%Y%m%d") + ".json"
+        with open(args_filename, "w") as outfile:
+                json.dump(vars(args), outfile, indent=4)
+        print("Input arguments saved to {}".format(args_filename))
+        
+        # Save fitted results, SNR and CNR if applicable.
         if args.calculate:
             GaussQual_io.save_GMM_single_results(
                 [mu, sigma, phi],
                 os.path.dirname(args.img_filepath),
-                os.path.splitext(os.path.basename(args.img_filepath))[0],
+                os.path.splitext(os.path.basename(args.img_filepath))[0] + "_" + date.today().strftime("%Y%m%d"),
                 SNRs,
                 CNRs
             )
@@ -134,9 +148,11 @@ def main():
             GaussQual_io.save_GMM_single_results(
                 [mu, sigma, phi],
                 os.path.dirname(args.img_filepath),
-                os.path.splitext(os.path.basename(args.img_filepath))[0]
+                os.path.splitext(os.path.basename(args.img_filepath))[0] + "_" + date.today().strftime("%Y%m%d")
             )
-        print("Results saved to {}_GMM_results.json".format(os.path.splitext(args.img_filepath)[0]))
+        print("Results saved to {}_{}_GMM_results.json".format(
+            os.path.splitext(args.img_filepath)[0],
+            date.today().strftime("%Y%m%d")))
 
 if __name__ == "__main__":
     main()

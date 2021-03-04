@@ -95,8 +95,10 @@ def GaussQual_parser():
         dest="save_results",
         action="count",
         default=0,
-        help="Save results. Use -s to save fitted results, -ss to save plots. \
-            If -s is called and SNR and CNR are calculated that will be saved too."
+        help="Save results. Save nothing (0) \
+              Save input arguments (1), \
+              Save input arguments, fitted results (2), \
+              Save input arguments, fitted results, and plots (3)"
     )
 
     return parser

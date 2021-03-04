@@ -161,7 +161,7 @@ def plot_img_and_histo(img_filepath, mask_percentage,
 
     """
     
-    plt.figure()
+    plt.figure(figsize=(8,4))
     plt.subplot(121)
     img = load_img(img_filepath,
                    mask_percentage=mask_percentage,

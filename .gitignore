@@ -1,4 +1,4 @@
 /__pycache__/*
-/example_images/3D_/*.json
-/example_images/3D_/*.png
+test/example_images/3D_/*.json
+test/example_images/3D_/*.png
 *.pyc
