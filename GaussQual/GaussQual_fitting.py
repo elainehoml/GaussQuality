@@ -78,7 +78,7 @@ def fit_GMM(img, n_components, mu_init=None, threshold=None):
     return mu_fitted, sigma_fitted, phi_fitted
 
 
-def run_GMM_fit(img_dir, prefix, n_components, z_percentage=70,
+def run_GMM_fit(img_dir, n_components, z_percentage=70,
                 n_runs=30, mask_percentage=70, threshold=None):
     """
     Fit Gaussian mixture models to 2-D images in a 3-D image sequence.
@@ -87,8 +87,6 @@ def run_GMM_fit(img_dir, prefix, n_components, z_percentage=70,
     ----------
     img_dir : str, path-like
         Directory to image.
-    prefix : str
-        Name of the image.
     n_components : int
         Number of Gaussian components to fit to grey value distribution.
         Usually `n_components` = number of materials in the specimen image.

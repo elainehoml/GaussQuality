@@ -58,7 +58,7 @@ def get_img_list(img_dir):
     img_list_unsorted = []
     for f in os.listdir(img_dir):
         if f.lower().endswith((".tif", ".tiff")):
-            img_list_unsorted.append(os.path.abspath(f))
+            img_list_unsorted.append(os.path.join(img_dir, f))
     return sorted(img_list_unsorted)
 
 def get_img_filepath(img_dir, index):
