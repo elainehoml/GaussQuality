@@ -18,6 +18,13 @@ def main():
         args.img_filepath,
         mask_percentage=args.mask_percentage
     )
+    print("Imported image {} with mask % {}".format(
+        args.img_filepath,
+        args.mask_percentage))
+    print("Fullsize image size = " + str(
+        GaussQual_io.load_img(args.img_filepath).shape
+    ))
+    print("Imported image size = " + str(img.shape))
     mu, sigma, phi = GaussQual_fitting.fit_GMM(
         img,
         n_components=args.n_components,

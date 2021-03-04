@@ -1,5 +1,7 @@
 import subprocess
 import os
+import numpy as np
+from pytest import approx
 
 test_dir = os.path.dirname(os.path.abspath(__file__))
 base_dir = os.path.dirname(test_dir)
@@ -34,3 +36,21 @@ def test_ncomp():
         'test/example_images/3D_/3D_00.tif',
     ])
     assert returncode != 0
+
+
+def test_mask_percentage():
+    # Check that mask percentage is applied correctly
+    stdout, stderr, returncode = run_GaussQual_2D([
+        'python',
+        'GaussQual/GaussQual_2D.py',
+        '-f',
+        'test/example_images/3D_/3D_00.tif',
+        '-n',
+        '3',
+        '--mask_percentage',
+        '20'
+    ])
+    fullsize_x, fullsize_y = stdout[1].split(" = ")[1][1:-3].split(", ")
+    masked_x, masked_y = stdout[2].split(" = ")[1][1:-3].split(", ")
+    assert (int(masked_x) / int(fullsize_x)) == approx(0.2, rel=0.05)
+ 
