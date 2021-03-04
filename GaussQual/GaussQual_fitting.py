@@ -117,7 +117,7 @@ def run_GMM_fit(img_dir, prefix, n_components, z_percentage=70,
     """
 
     # get number of slices
-    nslices = get_nslices(os.path.join(img_dir, prefix))
+    nslices = get_nslices(img_dir)
 
     # generate slice numbers to load, starting from centre and moving outwards
     central_slice = int(nslices/2)
@@ -139,7 +139,7 @@ def run_GMM_fit(img_dir, prefix, n_components, z_percentage=70,
     for run in range(n_runs):
         print("\nRun {}, Slice {}".format(run+1, run_slices[run]))
         # load single slice of image
-        img_filepath = get_img_filepath(img_dir, prefix, run_slices[run])
+        img_filepath = get_img_filepath(img_dir, run_slices[run] - 1)
         img = load_img(img_filepath, mask_percentage=mask_percentage)
 
         # fit GMM and get fitted parameters (mu, sigma, phi)

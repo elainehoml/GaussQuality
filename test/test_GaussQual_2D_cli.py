@@ -86,16 +86,16 @@ def test_save_results():
     '-sss'
     ])    
     today = date.today().strftime("%Y%m%d")
-    prefix = "test/example_images/3D_/3D_00_"
-    assert (
-        os.path.isfile("{}{}_GMM_results.json".format(
-        prefix, today)) == True) and (
-        os.path.isfile("{}histogram_{}.png".format(
-            prefix, today)) == True) and (
-        os.path.isfile("{}img_and_histogram_{}.png".format(
-            prefix, today)) == True) and (
-        os.path.isfile("{}input_{}.json".format(
-            prefix, today)) == True)
+    histo_filename = "test/example_images/3D_/results/3D_00_histogram_{}.png".format(today)
+    img_and_histo_filename = "test/example_images/3D_/results/3D_00_img_and_histogram_{}.png".format(today)
+    input_filename = "test/example_images/3D_/results/3D_00_{}_input.json".format(today)
+    results_filename = "test/example_images/3D_/results/3D_00_{}_GMM_results.json".format(today)
+    check_files = [histo_filename, img_and_histo_filename, input_filename, results_filename]
+    store_results = True
+    for files in check_files:
+        if os.path.isfile(files) == False:
+            store_results = False
+    assert store_results == True
 
 
 def test_Gaussians_specified():

@@ -16,6 +16,9 @@ def main():
     if args.n_components is None:
         raise ValueError("Please specify number of Gaussians to fit")
 
+    img_dir = os.path.dirname(args.img_filepath)
+    img_name = os.path.splitext(os.path.basename(args.img_filepath))[0]
+    
     img = GaussQual_io.load_img(
         args.img_filepath,
         mask_percentage=args.mask_percentage
@@ -59,11 +62,15 @@ def main():
             plt.show()
 
         if args.save_results >= 2:
-            plt.savefig(os.path.splitext(args.img_filepath)[0] + "_histogram_" + date.today().strftime("%Y%m%d") + ".png")
-            print("Histogram saved to {}_histogram_{}.png".format(
-                os.path.splitext(args.img_filepath)[0],
-                date.today().strftime("%Y%m%d")
-            ))
+            histo_outfile = os.path.join(
+                img_dir,
+                "results",
+                "{}_histogram_{}.png".format(
+                    img_name,
+                    date.today().strftime("%Y%m%d"))
+                )
+            plt.savefig(histo_outfile)
+            print("Histogram saved to {}".format(histo_outfile))
     
     if (args.plots == 2) or (args.plots == 3):
         if args.material_names is not None:
@@ -87,11 +94,15 @@ def main():
             plt.show()
         
         if args.save_results >= 2:
-            plt.savefig(os.path.splitext(args.img_filepath)[0] + "_img_and_histogram_" + date.today().strftime("%Y%m%d") + ".png")
-            print("Image and histogram side-by-side saved to {}_img_and_histogram_{}.png".format(
-                os.path.splitext(args.img_filepath)[0],
-                date.today().strftime("%Y%m%d")
-            ))
+            img_histo_outfile = os.path.join(
+                img_dir,
+                "results",
+                "{}_img_and_histogram_{}.png".format(
+                    img_name,
+                    date.today().strftime("%Y%m%d"))
+                )
+            plt.savefig(img_histo_outfile)
+            print("Image and histogram side-by-side saved to {}".format(img_histo_outfile))
 
     if args.calculate:
         # Dicts to hold SNRs and CNRs
@@ -130,7 +141,12 @@ def main():
     if args.save_results >= 1:
 
         # Save input args
-        args_filename = os.path.splitext(args.img_filepath)[0] + "_input_" + date.today().strftime("%Y%m%d") + ".json"
+        args_filename = os.path.join(
+            img_dir,
+            "results",
+            "{}_{}_input.json".format(
+                img_name,
+                date.today().strftime("%Y%m%d")))
         with open(args_filename, "w") as outfile:
                 json.dump(vars(args), outfile, indent=4)
         print("Input arguments saved to {}".format(args_filename))

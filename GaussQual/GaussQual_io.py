@@ -13,55 +13,66 @@ import matplotlib.pyplot as plt
 from skimage import io
 
 
-def get_img_filepath(img_dir, prefix, slice_number):
-    """
-    Get single image filepath for image sequence folders
+# def get_img_filepath(img_dir, prefix, slice_number):
+#     """
+#     Get single image filepath for image sequence folders
 
-    e.g. if an image sequence is saved under `img_dir/prefix/prefix0001.tif`,
-    this function returns the filepath including the correct number of 0's
-    at the beginning of the filename.
+#     e.g. if an image sequence is saved under `img_dir/prefix/prefix0001.tif`,
+#     this function returns the filepath including the correct number of 0's
+#     at the beginning of the filename.
 
-    Parameters
-    ----------
-    img_dir : str, path-like
-        Directory to image.
-    prefix : str
-        Name of the image.
-    slice_number : int
-        Int between 0 and 10000 which represents slice number.
+#     Parameters
+#     ----------
+#     img_dir : str, path-like
+#         Directory to image.
+#     prefix : str
+#         Name of the image.
+#     slice_number : int
+#         Int between 0 and 10000 which represents slice number.
 
-    Returns
-    -------
-    str, path-like
-        Full filepath to the slice slice_number of the image sequence saved
-        as `img_dir/prefix/prefix<slice_number>`.
+#     Returns
+#     -------
+#     str, path-like
+#         Full filepath to the slice slice_number of the image sequence saved
+#         as `img_dir/prefix/prefix<slice_number>`.
 
-    """
-    if slice_number < 10:
-        return os.path.join(img_dir,
-                            prefix,
-                            "{}000{}.tif".format(prefix, slice_number))
-    elif slice_number < 100:
-        return os.path.join(img_dir,
-                            prefix,
-                            "{}00{}.tif".format(prefix, slice_number))
-    elif slice_number < 1000:
-        return os.path.join(img_dir,
-                            prefix,
-                            "{}0{}.tif".format(prefix, slice_number))
-    elif slice_number < 10000:
-        return os.path.join(img_dir,
-                            prefix,
-                            "{}{}.tif".format(prefix, slice_number))
+#     """
+#     if slice_number < 10:
+#         return os.path.join(img_dir,
+#                             prefix,
+#                             "{}000{}.tif".format(prefix, slice_number))
+#     elif slice_number < 100:
+#         return os.path.join(img_dir,
+#                             prefix,
+#                             "{}00{}.tif".format(prefix, slice_number))
+#     elif slice_number < 1000:
+#         return os.path.join(img_dir,
+#                             prefix,
+#                             "{}0{}.tif".format(prefix, slice_number))
+#     elif slice_number < 10000:
+#         return os.path.join(img_dir,
+#                             prefix,
+#                             "{}{}.tif".format(prefix, slice_number))
+
+def get_img_list(img_dir):
+    img_list_unsorted = []
+    for f in os.listdir(img_dir):
+        if f.lower().endswith((".tif", ".tiff")):
+            img_list_unsorted.append(os.path.abspath(f))
+    return sorted(img_list_unsorted)
+
+def get_img_filepath(img_dir, index):
+    img_list = get_img_list(img_dir)
+    return img_list[index]
 
 
-def get_nslices(img_folder):
+def get_nslices(img_dir):
     """
     Gets number of slices in an image sequence folder.
 
     Parameters
     ----------
-    img_folder : str, path-like
+    img_dir : str, path-like
         Path to folder containing single images.
 
     Returns
@@ -71,7 +82,7 @@ def get_nslices(img_folder):
         exist in the folder besides the images.
 
     """
-    return len(os.listdir(img_folder))
+    return len(get_img_list(img_dir))
 
 
 def mask_img(img, mask_percentage):
@@ -158,7 +169,9 @@ def save_GMM_single_results(fitted_results, img_dir, prefix, SNR=None, CNR=None)
     None.
 
     """
-    save_single_filename = os.path.join(img_dir, prefix + "_GMM_results.json")
+    if os.path.isdir(os.path.join(img_dir, "results")) is False:
+        os.path.mkdir(os.path.join(img_dir, "results"))
+    save_single_filename = os.path.join(img_dir, "results", prefix + "_GMM_results.json")
 
     # unpack results
     mu_mean, sigma_mean, phi_mean = fitted_results
@@ -199,8 +212,10 @@ def save_GMM_slice_results(iter_results, img_dir, prefix):
     None.
 
     """
+    if os.path.isdir(os.path.join(img_dir, "results")) is False:
+        os.path.mkdir(os.path.join(img_dir, "results"))
     parameters = ["mu", "sigma", "phi"]
     for parameter in range(len(parameters)):
-        save_filename = os.path.join(img_dir,
+        save_filename = os.path.join(img_dir, "results",
                                      prefix + "_" + parameters[parameter] + "_GMM_slice_results.json")
         pd.DataFrame(iter_results[parameter]).to_json(save_filename, indent=4)

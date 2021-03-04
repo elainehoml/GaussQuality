@@ -194,13 +194,13 @@ def vis_slices(n_runs, z_percentage, mask_xy, img_dir, prefix):
     """
     
     # Get z
-    n_slices = get_nslices(os.path.join(img_dir, prefix))
+    n_slices = get_nslices(img_dir)
     n_slices_cropped = int(n_slices * z_percentage/100)
     central_slice = int(n_slices/2)
     z_plot = np.linspace(int(central_slice - n_slices_cropped/2), int(central_slice + n_slices_cropped/2), n_runs)
 
     # Get xy
-    slice_filepath = get_img_filepath(img_dir, prefix, 1)
+    slice_filepath = get_img_filepath(img_dir, 1)
     slice1 = load_img(slice_filepath)
     xy_dims = slice1.shape
 
