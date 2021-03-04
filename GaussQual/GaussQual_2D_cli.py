@@ -27,13 +27,6 @@ def GaussQual_parser():
         help="Number of Gaussian components to fit"
     )
     parser.add_argument(
-        "--mu_init",
-        dest="mu_init",
-        type=list,
-        default=None,
-        help="Initial guesses of mu, optional. Default is None."
-    )
-    parser.add_argument(
         "-t",
         "--threshold",
         dest="threshold",

@@ -30,7 +30,6 @@ def main():
     mu, sigma, phi = GaussQual_fitting.fit_GMM(
         img,
         n_components=args.n_components,
-        mu_init=args.mu_init,
         threshold=args.threshold
     )
     if args.plots > 0:
