@@ -97,3 +97,16 @@ def test_save_results():
         os.path.isfile("{}input_{}.json".format(
             prefix, today)) == True)
 
+
+def test_Gaussians_specified():
+    # Check that if SNR and CNR are calculated, Gaussians are specified
+    stdout, stderr, returncode = run_GaussQual_2D([
+    'python',
+    'GaussQual/GaussQual_2D.py',
+    '-f',
+    'test/example_images/3D_/3D_00.tif',
+    '-n',
+    '3',
+    '-c',
+    ])
+    assert returncode != 0

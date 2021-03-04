@@ -59,7 +59,7 @@ def main():
         if args.show_plots:
             plt.show()
 
-        if args.save_results>=2:
+        if args.save_results >= 2:
             plt.savefig(os.path.splitext(args.img_filepath)[0] + "_histogram_" + date.today().strftime("%Y%m%d") + ".png")
             print("Histogram saved to {}_histogram_{}.png".format(
                 os.path.splitext(args.img_filepath)[0],
@@ -87,7 +87,7 @@ def main():
         if args.show_plots:
             plt.show()
         
-        if args.save_results>=2:
+        if args.save_results >= 2:
             plt.savefig(os.path.splitext(args.img_filepath)[0] + "_img_and_histogram_" + date.today().strftime("%Y%m%d") + ".png")
             print("Image and histogram side-by-side saved to {}_img_and_histogram_{}.png".format(
                 os.path.splitext(args.img_filepath)[0],
@@ -127,6 +127,7 @@ def main():
             ))
             SNRs["{}-{}".format(args.background[i], args.feature[i])] = SNR
             CNRs["{}-{}".format(args.background[i], args.feature[i])] = CNR
+    
     if args.save_results >= 1:
 
         # Save input args
@@ -153,6 +154,9 @@ def main():
         print("Results saved to {}_{}_GMM_results.json".format(
             os.path.splitext(args.img_filepath)[0],
             date.today().strftime("%Y%m%d")))
+    
+    if (args.save_results >= 2) and (args.plots == 0):
+        print("No plots were generated, so no plots were saved. Use `-p` to plot.")
 
 if __name__ == "__main__":
     main()
