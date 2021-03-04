@@ -16,7 +16,11 @@ def main():
 
     fitted_results, iter_results = GaussQual_fitting.run_GMM_fit(
         args.img_dir,
-        args.n_components
+        args.n_components,
+        z_percentage=args.z_percentage,
+        n_runs=args.n_runs,
+        mask_percentage=args.mask_percentage,
+        threshold=args.threshold
     )
 
 if __name__ == "__main__":

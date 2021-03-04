@@ -2,3 +2,5 @@
 test/example_images/3D_/*.json
 test/example_images/3D_/*.png
 *.pyc
+test/example_images/3D_/results/
+*trial.py
