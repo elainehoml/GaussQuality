@@ -78,7 +78,7 @@ def fit_GMM(img, n_components, mu_init=None, threshold=None):
     return mu_fitted, sigma_fitted, phi_fitted
 
 
-def run_GMM_fit(img_dir, prefix, n_components, z_percentage=70,
+def run_GMM_fit(img_dir, n_components, z_percentage=70,
                 n_runs=30, mask_percentage=70, threshold=None):
     """
     Fit Gaussian mixture models to 2-D images in a 3-D image sequence.
@@ -87,8 +87,6 @@ def run_GMM_fit(img_dir, prefix, n_components, z_percentage=70,
     ----------
     img_dir : str, path-like
         Directory to image.
-    prefix : str
-        Name of the image.
     n_components : int
         Number of Gaussian components to fit to grey value distribution.
         Usually `n_components` = number of materials in the specimen image.
@@ -117,7 +115,7 @@ def run_GMM_fit(img_dir, prefix, n_components, z_percentage=70,
     """
 
     # get number of slices
-    nslices = get_nslices(os.path.join(img_dir, prefix))
+    nslices = get_nslices(img_dir)
 
     # generate slice numbers to load, starting from centre and moving outwards
     central_slice = int(nslices/2)
@@ -139,7 +137,7 @@ def run_GMM_fit(img_dir, prefix, n_components, z_percentage=70,
     for run in range(n_runs):
         print("\nRun {}, Slice {}".format(run+1, run_slices[run]))
         # load single slice of image
-        img_filepath = get_img_filepath(img_dir, prefix, run_slices[run])
+        img_filepath = get_img_filepath(img_dir, run_slices[run] - 1)
         img = load_img(img_filepath, mask_percentage=mask_percentage)
 
         # fit GMM and get fitted parameters (mu, sigma, phi)

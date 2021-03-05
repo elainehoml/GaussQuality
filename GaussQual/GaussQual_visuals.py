@@ -82,7 +82,7 @@ def plot_GMM(img, mu_fitted, sigma_fitted, phi_fitted, plot_title=None,
 
 
 # Plot the variation of sigma across slices
-def plot_slice_variation(fitted_results, iter_results, material_names):
+def plot_slice_variation(fitted_results, iter_results, material_names=None):
     """
     Plot fitted `mu`, `sigma` and `phi` distributions over the stack slices
 
@@ -94,7 +94,7 @@ def plot_slice_variation(fitted_results, iter_results, material_names):
     iter_results : list
         List containing fitted Gaussian properties for each 2-D image
         considered.
-    material_names : list
+    material_names : list, default None.
         List containing material names, e.g. "air".
 
     Returns
@@ -107,7 +107,10 @@ def plot_slice_variation(fitted_results, iter_results, material_names):
     mus, sigmas, phis = iter_results
 
     # Plot variation of mu across slices
-    plt.figure()
+    plt.figure(figsize=(6,3))
+
+    if material_names is None:
+        material_names = ["Gaussian {}".format(i) for i in range(len(mu_fitted))]
 
     def subplot(plot_no, fitted, means, material_names):
         plt.subplot(1, 3, plot_no + 1)
@@ -194,13 +197,13 @@ def vis_slices(n_runs, z_percentage, mask_xy, img_dir, prefix):
     """
     
     # Get z
-    n_slices = get_nslices(os.path.join(img_dir, prefix))
+    n_slices = get_nslices(img_dir)
     n_slices_cropped = int(n_slices * z_percentage/100)
     central_slice = int(n_slices/2)
     z_plot = np.linspace(int(central_slice - n_slices_cropped/2), int(central_slice + n_slices_cropped/2), n_runs)
 
     # Get xy
-    slice_filepath = get_img_filepath(img_dir, prefix, 1)
+    slice_filepath = get_img_filepath(img_dir, 1)
     slice1 = load_img(slice_filepath)
     xy_dims = slice1.shape
 

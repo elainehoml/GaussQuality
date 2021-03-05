@@ -32,7 +32,7 @@ def calc_snr(mu, sigma):
     if sigma == 0:
         return np.nan
     else:
-        return np.mean(mu)/np.mean(sigma)
+        return mu/sigma
 
 
 def calc_cnr(mu_a, mu_b, sigma_b):
@@ -62,10 +62,10 @@ def calc_cnr(mu_a, mu_b, sigma_b):
     if sigma_b == 0:
         return np.nan
     else:
-        return (np.mean(mu_a) - np.mean(mu_b)) / np.mean(sigma_b)
+        return np.abs(mu_a - mu_b) / sigma_b
 
 
-def calc_snr_stack(snr, iter_results, prefix, background_number,
+def calc_snr_stack(iter_results, background_number,
                    feature_number):
     """
     Calculate SNR for each 2-D image with Gaussian Mixture Model fitted
@@ -73,15 +73,8 @@ def calc_snr_stack(snr, iter_results, prefix, background_number,
 
     Parameters
     ----------
-    snr : dict
-        Dict to which SNR values are appended.
-        This dict has the structure:
-            `snr`[`prefix`] = [`SNR` for each `slice`]
     iter_results : list
         List of fitted `mu`, `sigma` and `phi` Gaussian properties.
-    prefix : str
-        image prefix, e.g. if the image is "Image01_0000.tif", `prefix` is
-        "Image01".
     background_number : int
         Material number of background material. Materials are numbered in
         ascending order of `mu`.
@@ -91,20 +84,20 @@ def calc_snr_stack(snr, iter_results, prefix, background_number,
 
     Returns
     -------
-    snr : dict
-        Dict to which SNR values are appended.
+    snrs : dict
+        Dict of SNRs. Keys = slice number, values = SNR.
 
     """
-    snr[prefix] = []
     mus, sigmas, phis = iter_results
-    for value in range(len(mus)):
-        mu = mus[value, feature_number]
-        sigma = sigmas[value, background_number]
-        snr[prefix].append(calc_snr(mu, sigma))
-    return snr
+    snrs = {}
+    for slice_number in list(mus.keys()):
+        mu = mus[slice_number][feature_number]
+        sigma = sigmas[slice_number][background_number]
+        snrs[slice_number] = calc_snr(mu, sigma)
+    return snrs
 
 
-def calc_cnr_stack(cnr, iter_results, prefix, background_number,
+def calc_cnr_stack(iter_results, background_number,
                    feature_number):
     """
     Calculate CNR for each 2-D image with Gaussian Mixture Model fitted
@@ -112,15 +105,8 @@ def calc_cnr_stack(cnr, iter_results, prefix, background_number,
 
     Parameters
     ----------
-    cnr : dict
-        Dict to which CNR values are appended.
-        This dict has the structure:
-            `cnr`[`prefix`] = [`CNR` for each `slice`]
     iter_results : list
         List of fitted `mu`, `sigma` and `phi` Gaussian properties.
-    prefix : str
-        image prefix, e.g. if the image is "Image01_0000.tif", `prefix` is
-        "Image01".
     background_number : int
         Material number of background material. Materials are numbered in
         ascending order of `mu`.
@@ -131,14 +117,14 @@ def calc_cnr_stack(cnr, iter_results, prefix, background_number,
     Returns
     -------
     cnr : dict
-        Dict to which CNR values are appended.
+        Dict of CNRs. Keys = slice number, values = CNR.
 
     """
-    cnr[prefix] = []
     mus, sigmas, phis = iter_results
-    for value in range(len(mus)):
-        mu_a = mus[value, feature_number]
-        mu_b = mus[value, background_number]
-        sigma_b = sigmas[value, background_number]
-        cnr[prefix].append(calc_cnr(mu_a, mu_b, sigma_b))
-    return cnr
+    cnrs = {}
+    for slice_number in list(mus.keys()):
+        mu_a = mus[slice_number][feature_number]
+        mu_b = mus[slice_number][background_number]
+        sigma_b = sigmas[slice_number][background_number]
+        cnrs[slice_number] = calc_cnr(mu_a, mu_b, sigma_b)
+    return cnrs
