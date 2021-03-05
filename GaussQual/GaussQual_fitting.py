@@ -120,13 +120,16 @@ def run_GMM_fit(img_dir, n_components, z_percentage=70,
     # generate slice numbers to load, starting from centre and moving outwards
     central_slice = int(nslices/2)
     z_range = int(nslices * z_percentage/100)
-    z_step = int(z_range/n_runs)
-    run_slices = [central_slice]
-    counter = 1
-    while len(run_slices) < n_runs:
-        run_slices.append(central_slice + counter * z_step)
-        run_slices.append(central_slice - counter * z_step)
-        counter += 1
+    # z_step = int(z_range/n_runs)
+    # run_slices = [central_slice]
+    # counter = 1
+    # while len(run_slices) < n_runs:
+    #     run_slices.append(central_slice + counter * z_step)
+    #     run_slices.append(central_slice - counter * z_step)
+    #     counter += 1
+    min_z = int(central_slice - (z_range/2))
+    max_z = int(central_slice + (z_range/2))
+    run_slices = np.linspace(min_z, max_z, num=n_runs, dtype=int)
 
     # Initialise empty dict to hold intermediate values of mu, sigma and phi
     mus = {}
