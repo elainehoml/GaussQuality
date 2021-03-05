@@ -71,6 +71,29 @@ def GaussQual3D_parser():
         help="Show plots in interactive window"
     )
     parser.add_argument(
+        "-c",
+        "--calc",
+        dest="calculate",
+        action="store_true",
+        help="Calculate stack SNR and CNR"
+    )
+    parser.add_argument(
+        "--background",
+        dest="background",
+        type=int,
+        nargs="*",
+        help="Index of background Gaussian, e.g. 0 is the Gaussian with lowest mean grey value, \
+            can specify more than one."    
+    )
+    parser.add_argument(
+        "--feature",
+        dest="feature",
+        type=int,
+        nargs="*",
+        help="Index of feature Gaussian, e.g. 0 is the Gaussian with the lowest mean grey value, \
+            can specify more than one."
+    )    
+    parser.add_argument(
         "-s",
         "--save_results",
         dest="save_results",

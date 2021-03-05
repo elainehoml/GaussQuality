@@ -11,7 +11,7 @@ import os, json
 import pandas as pd
 import matplotlib.pyplot as plt
 from skimage import io
-
+from datetime import datetime
 
 # def get_img_filepath(img_dir, prefix, slice_number):
 #     """
@@ -193,7 +193,7 @@ def save_GMM_single_results(fitted_results, img_dir, prefix, SNR=None, CNR=None)
         json.dump(dict_to_write, outfile, indent=4)
 
 
-def save_GMM_slice_results(iter_results, img_dir, prefix):
+def save_GMM_slice_results(iter_results, img_dir, img_name):
     """
     Saves fitted Gaussian properties for each individual 2-D image considered
     from a 3-D image sequence
@@ -204,7 +204,7 @@ def save_GMM_slice_results(iter_results, img_dir, prefix):
         List of fitted `mu`, `sigma` and `phi` Gaussian properties.
     img_dir : str, path-like
         Directory to image.
-    prefix : str
+    img_name : str
         Name of the image.
 
     Returns
@@ -217,5 +217,22 @@ def save_GMM_slice_results(iter_results, img_dir, prefix):
     parameters = ["mu", "sigma", "phi"]
     for parameter in range(len(parameters)):
         save_filename = os.path.join(img_dir, "results",
-                                     prefix + "_" + parameters[parameter] + "_GMM_slice_results.json")
+                                     "{}_{}_{}_GMM_slice_results.json".format(img_name,
+                                     parameters[parameter],
+                                     datetime.now().strftime("%Y%m%d_%H%M")))
         pd.DataFrame(iter_results[parameter]).to_json(save_filename, indent=4)
+        print("Stack {} saved to {}".format(
+            parameters[parameter],
+            save_filename
+        ))
+
+
+def save_SNR_CNR_stack(SNRs, CNRs, img_dir, img_name):
+    dict_to_write = {"SNR": SNRs, "CNR": CNRs}
+    snr_cnr_outfile = os.path.join(
+        img_dir,
+        "results",
+        "{}_{}_snr_cnr.json".format(img_name, datetime.now().strftime("%Y%m%d_%H%M"),))
+    with open(snr_cnr_outfile, "w") as outfile:
+        json.dump(dict_to_write, outfile, indent=4)
+    print("SNR and CNR saved as {}".format(snr_cnr_outfile))
