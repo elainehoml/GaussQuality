@@ -14,7 +14,7 @@ from GaussQual_io import *
 
 
 def plot_GMM(img, mu_fitted, sigma_fitted, phi_fitted, plot_title=None,
-             threshold=None, material_names=None):
+             threshold=None, material_names=None, c_bin=0.25):
     """
     Plots histogram of grey values with fitted Gaussians overlaid.
     Number of histogram bins depends on bit depth of image, e.g.
@@ -36,6 +36,9 @@ def plot_GMM(img, mu_fitted, sigma_fitted, phi_fitted, plot_title=None,
         (Min, Max) grey value to consider. The default is None.
     material_names : list, optional
 	    List containing material names to add to legend. The default is None.
+    c_bin : float, optional, range(0,1)
+        Constant by which to multiply sqrt(number of pixels) to determine bin size
+        0.125-0.25 for size 512^3 - 2048^3
 
     Returns
     -------
@@ -56,8 +59,16 @@ def plot_GMM(img, mu_fitted, sigma_fitted, phi_fitted, plot_title=None,
         print("Image thresholded to {}".format(threshold))
         plt.xlim(threshold)
 
+    # hist = plt.hist(img,
+    #                 bins=256**img.dtype.itemsize,
+    #                 density=True,
+    #                 histtype="stepfilled",
+    #                 label="Grey Values",
+    #                 alpha=0.5)
+
+    # nbins calculation from Reiter et al.
     hist = plt.hist(img,
-                    bins=256**img.dtype.itemsize,
+                    bins=int(c_bin*len(img)**0.5),
                     density=True,
                     histtype="stepfilled",
                     label="Grey Values",
@@ -175,7 +186,7 @@ def plot_img_and_histo(img_filepath, mask_percentage,
     plt.tight_layout()
 
 
-def vis_slices(n_runs, z_percentage, mask_xy, img_dir, prefix):
+def vis_slices(n_runs, z_percentage, mask_xy, img_dir):
     """ 3D Plot of data considered for GMM
     
     Parameters
@@ -188,8 +199,6 @@ def vis_slices(n_runs, z_percentage, mask_xy, img_dir, prefix):
         Percentage of x-y image to consider
     img_dir : str, path-like
         Directory where image sequence is
-    prefix : str
-        Filename of image
         
     Returns
     -------
