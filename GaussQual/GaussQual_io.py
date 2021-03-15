@@ -116,7 +116,7 @@ def mask_img(img, mask_percentage):
     return masked_img
 
 
-def load_img(img_filepath, show_image=False, mask_percentage=100.):
+def load_img(img_filepath, show_image=False, mask_percentage=100., vmin=None, vmax=None):
     """
     Loads image from `img_filepath` and applies a mask with percentage
     `mask_percentage`.
@@ -129,7 +129,11 @@ def load_img(img_filepath, show_image=False, mask_percentage=100.):
         If True, display the image. The default is False.
     mask_percentage : float, optional
         Percentage of the image to import, as a rectangle centred in the x-y
-        plane. The default is 100..
+        plane. The default is 100.
+    v_min : float, optional, default None
+        Minimum grey value to plot
+    v_max : float, optional, default None
+        Maximum grey value to plot
 
     Returns
     -------
@@ -140,7 +144,7 @@ def load_img(img_filepath, show_image=False, mask_percentage=100.):
     img = io.imread(img_filepath)
     masked_img = mask_img(img, mask_percentage)
     if show_image is True:
-        plt.imshow(masked_img, cmap="gray")
+        plt.imshow(masked_img, cmap="gray", vmin=vmin, vmax=vmax)
         plt.title("{}\n{}".format(os.path.split(img_filepath)[-1],
                                   masked_img.shape))
     return masked_img
