@@ -14,7 +14,7 @@ from GaussQual_io import *
 
 
 def plot_GMM(img, mu_fitted, sigma_fitted, phi_fitted, plot_title=None,
-             threshold=None, material_names=None):
+             threshold=None, material_names=None, c_bin=0.25):
     """
     Plots histogram of grey values with fitted Gaussians overlaid.
     Number of histogram bins depends on bit depth of image, e.g.
@@ -36,6 +36,9 @@ def plot_GMM(img, mu_fitted, sigma_fitted, phi_fitted, plot_title=None,
         (Min, Max) grey value to consider. The default is None.
     material_names : list, optional
 	    List containing material names to add to legend. The default is None.
+    c_bin : float, optional, range(0,1)
+        Constant by which to multiply sqrt(number of pixels) to determine bin size
+        0.125-0.25 for size 512^3 - 2048^3. Default 0.25.
 
     Returns
     -------
@@ -56,8 +59,9 @@ def plot_GMM(img, mu_fitted, sigma_fitted, phi_fitted, plot_title=None,
         print("Image thresholded to {}".format(threshold))
         plt.xlim(threshold)
 
+    # nbins calculation from Reiter et al.
     hist = plt.hist(img,
-                    bins=256**img.dtype.itemsize,
+                    bins=int(c_bin*len(img)**0.5),
                     density=True,
                     histtype="stepfilled",
                     label="Grey Values",
@@ -137,7 +141,8 @@ def plot_slice_variation(fitted_results, iter_results, material_names=None):
 
 
 def plot_img_and_histo(img_filepath, mask_percentage,
-                       fitted_results, threshold=None, material_names=None):
+                       fitted_results, threshold=None, material_names=None, c_bin=0.25,
+                       vmin=None, vmax=None):
     """
     Plots imported image and histogram with overlaid fitted Gaussian
     distributions side-by-side.
@@ -157,6 +162,14 @@ def plot_img_and_histo(img_filepath, mask_percentage,
     material_names : list, optional
 	    List containing material names to add to legend. The default is None.
         Materials should be listed in ascending order of mu.
+    c_bin : float, optional, range(0,1)
+        Constant by which to multiply sqrt(number of pixels) to determine bin size
+        0.125-0.25 for size 512^3 - 2048^3. Default 0.25
+    v_min : float, optional, default None
+        Minimum grey value to plot
+    v_max : float, optional, default None
+        Maximum grey value to plot
+
 
     Returns
     -------
@@ -168,14 +181,20 @@ def plot_img_and_histo(img_filepath, mask_percentage,
     plt.subplot(121)
     img = load_img(img_filepath,
                    mask_percentage=mask_percentage,
-                   show_image=True)
+                   show_image=True,
+                   vmin=vmin,
+                   vmax=vmax)
     plt.subplot(122)
     mu_fitted, sigma_fitted, phi_fitted = fitted_results
-    plot_GMM(img, mu_fitted, sigma_fitted, phi_fitted, threshold=threshold, material_names=material_names)
+    plot_GMM(img, 
+             mu_fitted, sigma_fitted, phi_fitted, 
+             threshold=threshold,
+             material_names=material_names,
+             c_bin=c_bin)
     plt.tight_layout()
 
 
-def vis_slices(n_runs, z_percentage, mask_xy, img_dir, prefix):
+def vis_slices(n_runs, z_percentage, mask_xy, img_dir):
     """ 3D Plot of data considered for GMM
     
     Parameters
@@ -188,8 +207,6 @@ def vis_slices(n_runs, z_percentage, mask_xy, img_dir, prefix):
         Percentage of x-y image to consider
     img_dir : str, path-like
         Directory where image sequence is
-    prefix : str
-        Filename of image
         
     Returns
     -------

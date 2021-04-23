@@ -8,7 +8,7 @@ test_dir = os.path.dirname(os.path.abspath(__file__))
 base_dir = os.path.dirname(test_dir)
 os.chdir(base_dir)
 
-def run_GaussQual_2D(args):
+def run_cli(args):
     output = subprocess.run(args, capture_output=True)
     stdout = str(output.stdout).split("\\n")
     stderr = str(output.stderr).split("\\n")
@@ -24,13 +24,13 @@ def test_basic():
     'test/example_images/3D_/3D_00.tif',
     '-n',
     '3']
-    stdout, stderr, returncode = run_GaussQual_2D(basic_test)
+    stdout, stderr, returncode = run_cli(basic_test)
     assert returncode == 0
 
 
 def test_ncomp():
     # Check that error is thrown when n_components is not specified
-    stdout, stderr, returncode = run_GaussQual_2D([
+    stdout, stderr, returncode = run_cli([
         'python',
         'GaussQual/GaussQual_2D.py'
         '-f',
@@ -41,7 +41,7 @@ def test_ncomp():
 
 def test_mask_percentage():
     # Check that mask percentage is applied correctly
-    stdout, stderr, returncode = run_GaussQual_2D([
+    stdout, stderr, returncode = run_cli([
         'python',
         'GaussQual/GaussQual_2D.py',
         '-f',
@@ -58,7 +58,7 @@ def test_mask_percentage():
 
 def test_threshold():
     # Check that threshold is applied correctly
-    stdout, stderr, returncode = run_GaussQual_2D([
+    stdout, stderr, returncode = run_cli([
     'python',
     'GaussQual/GaussQual_2D.py',
     '-f',
@@ -75,7 +75,7 @@ def test_threshold():
 
 def test_save_results():
     # Check that all results are saved
-    stdout, stderr, returncode = run_GaussQual_2D([
+    stdout, stderr, returncode = run_cli([
     'python',
     'GaussQual/GaussQual_2D.py',
     '-f',
@@ -100,7 +100,7 @@ def test_save_results():
 
 def test_Gaussians_specified():
     # Check that if SNR and CNR are calculated, Gaussians are specified
-    stdout, stderr, returncode = run_GaussQual_2D([
+    stdout, stderr, returncode = run_cli([
     'python',
     'GaussQual/GaussQual_2D.py',
     '-f',
