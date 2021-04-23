@@ -60,6 +60,8 @@ def plot_GMM(img, mu_fitted, sigma_fitted, phi_fitted, plot_title=None,
         plt.xlim(threshold)
 
     # nbins calculation from Reiter et al.
+    if c_bin is None:
+        c_bin = 0.45
     hist = plt.hist(img,
                     bins=int(c_bin*len(img)**0.5),
                     density=True,
@@ -68,7 +70,7 @@ def plot_GMM(img, mu_fitted, sigma_fitted, phi_fitted, plot_title=None,
                     alpha=0.5)
 
     # Generate and plot individual fitted Gaussian distributions
-    gaussian_xs = np.linspace(0, max(hist[1]))
+    gaussian_xs = np.linspace(min(hist[1]), max(hist[1]))
     gaussian_ys = np.zeros((len(gaussian_xs), len(mu_fitted)))
     for i in range(len(mu_fitted)):
         gaussian_y = norm.pdf(gaussian_xs, mu_fitted[i], sigma_fitted[i])

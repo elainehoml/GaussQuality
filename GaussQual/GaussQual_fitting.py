@@ -79,7 +79,7 @@ def fit_GMM(img, n_components, mu_init=None, threshold=None):
 
 
 def run_GMM_fit(img_dir, n_components, z_percentage=70,
-                n_runs=30, mask_percentage=70, threshold=None):
+                n_runs=30, mask_percentage=70, threshold=None, mu_init=None):
     """
     Fit Gaussian mixture models to 2-D images in a 3-D image sequence.
 
@@ -102,6 +102,8 @@ def run_GMM_fit(img_dir, n_components, z_percentage=70,
         Ranges from 0-100.
     threshold : tuple, optional
         (Min, Max) grey value to consider. The default is None.
+    mu_init : list, optional
+        List of initial mean values to use. The default is None.
 
     Returns
     -------
@@ -140,9 +142,10 @@ def run_GMM_fit(img_dir, n_components, z_percentage=70,
         if threshold is not None:
             mu_fitted, sigma_fitted, phi_fitted = fit_GMM(img,
                                                           n_components,
-                                                          threshold=threshold)
+                                                          threshold=threshold,
+                                                          mu_init=mu_init)
         else:
-            mu_fitted, sigma_fitted, phi_fitted = fit_GMM(img, n_components)
+            mu_fitted, sigma_fitted, phi_fitted = fit_GMM(img, n_components, mu_init=mu_init)
 
         mus[run_slices[run]] = mu_fitted
         sigmas[run_slices[run]] = sigma_fitted
