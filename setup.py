@@ -1,9 +1,9 @@
 from distutils.core import setup
 
 setup(
-    name='GaussQual',
+    name='gaussquality',
     version='0.1dev',
-    packages=['GaussQual',],
+    packages=['gaussquality',],
     license='GNU GPLv2',
     long_description=open('README.md').read(),
 )
