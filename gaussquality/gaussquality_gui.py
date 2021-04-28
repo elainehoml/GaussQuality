@@ -1,3 +1,4 @@
+import sys
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import ttk
@@ -13,7 +14,7 @@ class gaussquality_gui(tk.Frame):
         super().__init__(root)
         root.title("GaussQuality: Image Quality Assessment with Gaussian Mixture Models")
         self.root = root
-        # self.pack()
+        print("-------- GaussQuality --------")
         self.create_widgets()
     
     def create_widgets(self):
@@ -58,13 +59,17 @@ class gaussquality_gui(tk.Frame):
         # Calculate SNR and CNR
         self.background = tk.IntVar()
         tk.Label(self.root, text="Gaussian component number for background").grid(row=8)
-        ttk.Entry(self.root, textvariable=self.background)
+        ttk.Entry(self.root, textvariable=self.background).grid(row=8, column=1)
         self.feature = tk.IntVar()
         tk.Label(self.root, text="Gaussian component number for feature").grid(row=9)
-        ttk.Entry(self.root, textvariable=self.feature)
+        ttk.Entry(self.root, textvariable=self.feature).grid(row=9, column=1)
 
         # Run button
         tk.Button(self.root, text="Run GaussQuality", command=self.run_gaussquality).grid(row=10)
+
+        # # STDOUT output
+        # self.text_box = tk.Text(self.root, wrap='word').grid(row=11)
+        # sys.stdout = StdoutRedirector(self.text_box)
     
     def get_img_dir(self):
         self.img_dir = filedialog.askdirectory()
@@ -86,7 +91,32 @@ class gaussquality_gui(tk.Frame):
         print("Threshold: {}".format(self.thresholds))
         print("Gaussian component for background: {}".format(self.background.get()))
         print("Gaussian component for feature: {}".format(self.feature.get()))
+        gaussquality_fitting.run_GMM_fit(self.img_dir, 
+                                         self.n_components.get(),
+                                         self.z_percentage.get(),
+                                         self.n_runs.get(),
+                                         self.mask_percentage.get(),
+                                         self.thresholds)
+
+
+class StdoutRedirector(object):
+    def __init__(self, text_area):
+        self.text_area = text_area
+    def write(self, str):
+        self.text_area.insert("end", str)
+    def flush(self):
+        pass
+
+
+def redirector(inputStr=""):
+    root = tk.Toplevel()
+    T = tk.Text(root)
+    sys.stdout = StdoutRedirector(T)
+    T.pack()
+    T.insert("end", "------- GaussQuality Output window --------")
+    T.insert("end", inputStr)
 
 root = tk.Tk()
 gaussquality_gui(root)
+r = redirector()
 root.mainloop()
