@@ -1,39 +1,16 @@
-from argparse import ArgumentParser
+# from argparse import ArgumentParser
+import argparse
 
-
-def GaussQual3D_parser():
-    parser = ArgumentParser(
-        description="Assess quality of 3D greyscale images with Gaussian Mixture Models"
+def gaussquality_parser():
+    parser = argparse.ArgumentParser(
+        description="Assess quality of 2D greyscale images with Gaussian Mixture Models"
     )
     parser.add_argument(
-        "-d",
-        "--img_dir",
-        dest="img_dir",
-        help="Path to the directory of the image sequence, e.g., \
-            <img_dir>/<prefix>/<prefix>_0000.tif"
-    )
-    parser.add_argument(
-        "-n",
-        "--n_components",
-        dest="n_components",
-        type=int,
-        help="Number of Gaussian components to fit"
-    )
-    parser.add_argument(
-        "-z",
-        "--z_percentage",
-        dest="z_percentage",
-        help="Percentage of stack to use in z",
-        type=float,
-        default=70
-    )
-    parser.add_argument(
-        "-r",
-        "--n_runs",
-        dest="n_runs",
-        help="Number of slices to analyse",
-        type=int,
-        default=10
+        "-f",
+        "--img_filepath",
+        dest="img_filepath",
+        type=str,
+        help="Path to the single image to be analysed"
     )
     parser.add_argument(
         "--mask_percentage",
@@ -43,19 +20,37 @@ def GaussQual3D_parser():
         help="Percentage of image to use in x-y"
     )
     parser.add_argument(
+        "-n",
+        "--n_components",
+        dest="n_components",
+        type=int,
+        help="Number of Gaussian components to fit"
+    )
+    parser.add_argument(
         "-t",
         "--threshold",
+        dest="threshold",
+        type=float,
         nargs=2,
         default=None,
-        type=float,
         help="Min and Max grey values to consider, optional. Default uses entire range."
     )
     parser.add_argument(
         "-p",
         "--plots",
         dest="plots",
+        default=0,
+        action="count",
+        help="Plot nothing (0) \
+              Plot histogram alone (1), \
+              Plot image and histogram side-by-side (2) \
+              Plot both (3)"
+    )
+    parser.add_argument(
+        "--show_plots",
+        dest="show_plots",
         action="store_true",
-        help="Plot slice variation. To plot histogram and others please use GaussQual_2D."    
+        help="Show plots"
     )
     parser.add_argument(
         "--material_names",
@@ -65,17 +60,11 @@ def GaussQual3D_parser():
         help="List of material names in ascending order of grey value mu"
     )
     parser.add_argument(
-        "--show_plots",
-        dest="show_plots",
-        action="store_true",
-        help="Show plots in interactive window"
-    )
-    parser.add_argument(
         "-c",
         "--calc",
         dest="calculate",
         action="store_true",
-        help="Calculate stack SNR and CNR"
+        help="Calculate SNR and CNR"
     )
     parser.add_argument(
         "--background",
@@ -92,7 +81,7 @@ def GaussQual3D_parser():
         nargs="*",
         help="Index of feature Gaussian, e.g. 0 is the Gaussian with the lowest mean grey value, \
             can specify more than one."
-    )    
+    )
     parser.add_argument(
         "-s",
         "--save_results",

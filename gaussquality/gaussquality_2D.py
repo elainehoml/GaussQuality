@@ -1,17 +1,17 @@
 import os
 import matplotlib.pyplot as plt
-from datetime import date
+import datetime
 import json
 
-import GaussQual_io
-import GaussQual_fitting
-import GaussQual_visuals
-import GaussQual_calc
-from GaussQual_2D_cli import GaussQual_parser
+import gaussquality_io
+import gaussquality_fitting
+import gaussquality_visuals
+import gaussquality_calc
+import gaussquality_2D_cli
 
 
 def main():
-    args = GaussQual_parser().parse_args()
+    args = gaussquality_2D_cli.gaussquality_parser().parse_args()
     
     if args.n_components is None:
         raise ValueError("Please specify number of Gaussians to fit")
@@ -19,7 +19,7 @@ def main():
     img_dir = os.path.dirname(args.img_filepath)
     img_name = os.path.splitext(os.path.basename(args.img_filepath))[0]
     
-    img = GaussQual_io.load_img(
+    img = gaussquality_io.load_img(
         args.img_filepath,
         mask_percentage=args.mask_percentage
     )
@@ -27,10 +27,10 @@ def main():
         args.img_filepath,
         args.mask_percentage))
     print("Fullsize image size = " + str(
-        GaussQual_io.load_img(args.img_filepath).shape
+        gaussquality_io.load_img(args.img_filepath).shape
     ))
     print("Imported image size = " + str(img.shape))
-    mu, sigma, phi = GaussQual_fitting.fit_GMM(
+    mu, sigma, phi = gaussquality_fitting.fit_GMM(
         img,
         n_components=args.n_components,
         threshold=args.threshold
@@ -45,7 +45,7 @@ def main():
             material_names=args.material_names
             if len(material_names) != len(mu):
                 raise ValueError("Incorrect number of material names passed, should be {}".format(len(mu)))
-            GaussQual_visuals.plot_GMM(
+            gaussquality_visuals.plot_GMM(
                 img,
                 mu,
                 sigma,
@@ -54,7 +54,7 @@ def main():
                 material_names=material_names
             )
         else:
-            GaussQual_visuals.plot_GMM(
+            gaussquality_visuals.plot_GMM(
                 img, mu, sigma, phi, threshold=args.threshold
             )
     
@@ -67,7 +67,7 @@ def main():
                 "results",
                 "{}_histogram_{}.png".format(
                     img_name,
-                    date.today().strftime("%Y%m%d"))
+                    datetime.date.today().strftime("%Y%m%d"))
                 )
             plt.savefig(histo_outfile)
             print("Histogram saved to {}".format(histo_outfile))
@@ -77,7 +77,7 @@ def main():
             material_names=args.material_names
             if len(material_names) != len(mu):
                 raise ValueError("Incorrect number of material names passed, should be {}".format(len(mu)))
-            GaussQual_visuals.plot_img_and_histo(
+            gaussquality_visuals.plot_img_and_histo(
                 args.img_filepath,
                 args.mask_percentage,
                 [mu, sigma, phi],
@@ -86,7 +86,7 @@ def main():
             )
 
         else:
-            GaussQual_visuals.plot_img_and_histo(
+            gaussquality_visuals.plot_img_and_histo(
                 args.img_filepath, args.mask_percentage, [mu, sigma, phi], args.threshold
             )
 
@@ -99,7 +99,7 @@ def main():
                 "results",
                 "{}_img_and_histogram_{}.png".format(
                     img_name,
-                    date.today().strftime("%Y%m%d"))
+                    datetime.date.today().strftime("%Y%m%d"))
                 )
             plt.savefig(img_histo_outfile)
             print("Image and histogram side-by-side saved to {}".format(img_histo_outfile))
@@ -121,10 +121,10 @@ def main():
         for i in range(len(args.background)):
             if (args.background[i] > len(mu)) or (args.feature[i] > len(mu)):
                 raise ValueError("Background and feature must be between 0 and {}".format(len(mu)))
-            SNR = GaussQual_calc.calc_snr(
+            SNR = gaussquality_calc.calc_snr(
                 mu[args.feature[i]],
                 sigma[args.background[i]])
-            CNR = GaussQual_calc.calc_cnr(
+            CNR = gaussquality_calc.calc_cnr(
                 mu[args.feature[i]],
                 mu[args.background[i]],
                 sigma[args.background[i]]
@@ -146,29 +146,29 @@ def main():
             "results",
             "{}_{}_input.json".format(
                 img_name,
-                date.today().strftime("%Y%m%d")))
+                datetime.date.today().strftime("%Y%m%d")))
         with open(args_filename, "w") as outfile:
                 json.dump(vars(args), outfile, indent=4)
         print("Input arguments saved to {}".format(args_filename))
         
         # Save fitted results, SNR and CNR if applicable.
         if args.calculate:
-            GaussQual_io.save_GMM_single_results(
+            gaussquality_io.save_GMM_single_results(
                 [mu, sigma, phi],
                 os.path.dirname(args.img_filepath),
-                os.path.splitext(os.path.basename(args.img_filepath))[0] + "_" + date.today().strftime("%Y%m%d"),
+                os.path.splitext(os.path.basename(args.img_filepath))[0] + "_" + datetime.date.today().strftime("%Y%m%d"),
                 SNRs,
                 CNRs
             )
         else:
-            GaussQual_io.save_GMM_single_results(
+            gaussquality_io.save_GMM_single_results(
                 [mu, sigma, phi],
                 os.path.dirname(args.img_filepath),
-                os.path.splitext(os.path.basename(args.img_filepath))[0] + "_" + date.today().strftime("%Y%m%d")
+                os.path.splitext(os.path.basename(args.img_filepath))[0] + "_" + datetime.date.today().strftime("%Y%m%d")
             )
         print("Results saved to {}_{}_GMM_results.json".format(
             os.path.splitext(args.img_filepath)[0],
-            date.today().strftime("%Y%m%d")))
+            datetime.date.today().strftime("%Y%m%d")))
     
     if (args.save_results >= 2) and (args.plots == 0):
         print("No plots were generated, so no plots were saved. Use `-p` to plot.")

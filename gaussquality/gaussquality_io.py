@@ -10,51 +10,25 @@ Created on Mon Jan 25 14:50:04 2021
 import os, json
 import pandas as pd
 import matplotlib.pyplot as plt
-from skimage import io
-from datetime import datetime
+import skimage.io
+import datetime
 
-# def get_img_filepath(img_dir, prefix, slice_number):
-#     """
-#     Get single image filepath for image sequence folders
-
-#     e.g. if an image sequence is saved under `img_dir/prefix/prefix0001.tif`,
-#     this function returns the filepath including the correct number of 0's
-#     at the beginning of the filename.
-
-#     Parameters
-#     ----------
-#     img_dir : str, path-like
-#         Directory to image.
-#     prefix : str
-#         Name of the image.
-#     slice_number : int
-#         Int between 0 and 10000 which represents slice number.
-
-#     Returns
-#     -------
-#     str, path-like
-#         Full filepath to the slice slice_number of the image sequence saved
-#         as `img_dir/prefix/prefix<slice_number>`.
-
-#     """
-#     if slice_number < 10:
-#         return os.path.join(img_dir,
-#                             prefix,
-#                             "{}000{}.tif".format(prefix, slice_number))
-#     elif slice_number < 100:
-#         return os.path.join(img_dir,
-#                             prefix,
-#                             "{}00{}.tif".format(prefix, slice_number))
-#     elif slice_number < 1000:
-#         return os.path.join(img_dir,
-#                             prefix,
-#                             "{}0{}.tif".format(prefix, slice_number))
-#     elif slice_number < 10000:
-#         return os.path.join(img_dir,
-#                             prefix,
-#                             "{}{}.tif".format(prefix, slice_number))
 
 def get_img_list(img_dir):
+    """
+    Gets list of .tiff images in an image sequence folder.
+
+    Parameters
+    ----------
+    img_dir : str, path-like
+        Path to folder containing single images.
+
+    Returns
+    -------
+    list
+        List of image filenames in the folder in ascending order. Only works on .tiff images.
+
+    """
     img_list_unsorted = []
     for f in os.listdir(img_dir):
         if f.lower().endswith((".tif", ".tiff")):
@@ -62,6 +36,22 @@ def get_img_list(img_dir):
     return sorted(img_list_unsorted)
 
 def get_img_filepath(img_dir, index):
+    """
+    Gets filepath for a specific image in a sequence.
+
+    Parameters
+    ----------
+    img_dir : str, path-like
+        Path to folder containing single images.
+    index : int
+        Index of image
+
+    Returns
+    -------
+    str, path-like
+        Image filepath for index image in sequence
+
+    """
     img_list = get_img_list(img_dir)
     return img_list[index]
 
@@ -141,7 +131,7 @@ def load_img(img_filepath, show_image=False, mask_percentage=100., vmin=None, vm
         2-D array representing masked image.
 
     """
-    img = io.imread(img_filepath)
+    img = skimage.io.imread(img_filepath)
     masked_img = mask_img(img, mask_percentage)
     if show_image is True:
         plt.imshow(masked_img, cmap="gray", vmin=vmin, vmax=vmax)
@@ -223,7 +213,7 @@ def save_GMM_slice_results(iter_results, img_dir, img_name):
         save_filename = os.path.join(img_dir, "results",
                                      "{}_{}_{}_GMM_slice_results.json".format(img_name,
                                      parameters[parameter],
-                                     datetime.now().strftime("%Y%m%d_%H%M")))
+                                     datetime.datetime.now().strftime("%Y%m%d_%H%M")))
         pd.DataFrame(iter_results[parameter]).to_json(save_filename, indent=4)
         print("Stack {} saved to {}".format(
             parameters[parameter],
@@ -236,7 +226,7 @@ def save_SNR_CNR_stack(SNRs, CNRs, img_dir, img_name):
     snr_cnr_outfile = os.path.join(
         img_dir,
         "results",
-        "{}_{}_snr_cnr.json".format(img_name, datetime.now().strftime("%Y%m%d_%H%M"),))
+        "{}_{}_snr_cnr.json".format(img_name, datetime.datetime.now().strftime("%Y%m%d_%H%M"),))
     with open(snr_cnr_outfile, "w") as outfile:
         json.dump(dict_to_write, outfile, indent=4)
     print("SNR and CNR saved as {}".format(snr_cnr_outfile))

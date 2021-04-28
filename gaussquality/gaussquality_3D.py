@@ -1,17 +1,16 @@
 import os
 import json
-from datetime import datetime
+import datetime
 import matplotlib.pyplot as plt
 
-import GaussQual_io
-import GaussQual_fitting
-import GaussQual_visuals
-import GaussQual_calc
-from GaussQual_3D_cli import GaussQual3D_parser
-
+import gaussquality_io
+import gaussquality_fitting
+import gaussquality_visuals
+import gaussquality_calc
+import gaussquality_3D_cli
 
 def main():
-    args = GaussQual3D_parser().parse_args()
+    args = gaussquality_3D_cli.gaussquality3D_parser().parse_args()
     img_name = os.path.basename(os.path.normpath(args.img_dir))
 
     if args.n_components is None:
@@ -20,7 +19,7 @@ def main():
     print("\nImage = {}".format(args.img_dir))
     print("----- Fitting Gaussian -----")
     # Run GMM fitting
-    fitted_results, iter_results = GaussQual_fitting.run_GMM_fit(
+    fitted_results, iter_results = gaussquality_fitting.run_GMM_fit(
         args.img_dir,
         args.n_components,
         z_percentage=args.z_percentage,
@@ -32,7 +31,7 @@ def main():
     # Plot slice variation
     if args.plots == True:
         print("\n----- Generating plots -----")
-        GaussQual_visuals.plot_slice_variation(
+        gaussquality_visuals.plot_slice_variation(
             fitted_results=fitted_results,
             iter_results=iter_results,
             material_names=args.material_names
@@ -45,7 +44,7 @@ def main():
                 "results",
                 "{}_sv_{}.png".format(
                     img_name,
-                    datetime.now().strftime("%Y%m%d_%H%M"))
+                    datetime.datetime.now().strftime("%Y%m%d_%H%M"))
             )
             plt.savefig(sv_outfile)
             print("Slice variation plot saved to {}".format(sv_outfile))
@@ -57,7 +56,7 @@ def main():
             raise ValueError("Please specify equal numbers of background and feature Gaussians.")
         SNRs = {}
         for i in range(len(args.background)):
-            SNRs["{}-{}".format(args.background[i], args.feature[i])] = GaussQual_calc.calc_snr_stack(
+            SNRs["{}-{}".format(args.background[i], args.feature[i])] = gaussquality_calc.calc_snr_stack(
                 iter_results,
                 args.background[i],
                 args.feature[i]
@@ -66,7 +65,7 @@ def main():
 
         CNRs = {}
         for i in range(len(args.background)):
-            CNRs["{}-{}".format(args.background[i], args.feature[i])] = GaussQual_calc.calc_cnr_stack(
+            CNRs["{}-{}".format(args.background[i], args.feature[i])] = gaussquality_calc.calc_cnr_stack(
                 iter_results,
                 args.background[i],
                 args.feature[i]
@@ -96,23 +95,23 @@ def main():
             "results",
             "{}_{}_input.json".format(
                 img_name,
-                datetime.now().strftime("%Y%m%d_%H%M")))
+                datetime.datetime.now().strftime("%Y%m%d_%H%M")))
         with open(args_outfile, "w") as outfile:
                 json.dump(vars(args), outfile, indent=4)
         print("Input arguments saved to {}".format(args_outfile))
 
         # Save fitted results
-        GaussQual_io.save_GMM_single_results(
+        gaussquality_io.save_GMM_single_results(
             fitted_results,
             args.img_dir,
-            img_name + "_" + datetime.now().strftime("%Y%m%d_%H%M")
+            img_name + "_" + datetime.datetime.now().strftime("%Y%m%d_%H%M")
         )
         print("Average stack results saved to {}_{}_GMM_results.json".format(
             args.img_dir,
-            datetime.now().strftime("%Y%m%d_%H%M")))
+            datetime.datetime.now().strftime("%Y%m%d_%H%M")))
 
         # Save iter results
-        GaussQual_io.save_GMM_slice_results(
+        gaussquality_io.save_GMM_slice_results(
             iter_results,
             args.img_dir,
             img_name
@@ -120,7 +119,7 @@ def main():
 
         # Save SNR and CNR
         if args.calculate:
-            GaussQual_io.save_SNR_CNR_stack(
+            gaussquality_io.save_SNR_CNR_stack(
                 SNRs,
                 CNRs,
                 args.img_dir,

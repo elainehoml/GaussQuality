@@ -11,7 +11,7 @@ import time
 import numpy as np
 import sklearn.mixture
 
-from GaussQual_io import *
+import gaussquality_io
 
 
 def fit_GMM(img, n_components, mu_init=None, threshold=None):
@@ -117,7 +117,7 @@ def run_GMM_fit(img_dir, n_components, z_percentage=70,
     """
 
     # get number of slices
-    nslices = get_nslices(img_dir)
+    nslices = gaussquality_io.get_nslices(img_dir)
 
     # generate slice numbers to load, starting from centre and moving outwards
     central_slice = int(nslices/2)
@@ -135,8 +135,8 @@ def run_GMM_fit(img_dir, n_components, z_percentage=70,
     for run in range(n_runs):
         print("\nRun {}, Slice {}".format(run+1, run_slices[run]))
         # load single slice of image
-        img_filepath = get_img_filepath(img_dir, run_slices[run] - 1)
-        img = load_img(img_filepath, mask_percentage=mask_percentage)
+        img_filepath = gaussquality_io.get_img_filepath(img_dir, run_slices[run] - 1)
+        img = gaussquality_io.load_img(img_filepath, mask_percentage=mask_percentage)
 
         # fit GMM and get fitted parameters (mu, sigma, phi)
         if threshold is not None:

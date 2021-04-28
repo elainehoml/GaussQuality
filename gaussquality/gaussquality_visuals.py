@@ -8,9 +8,9 @@ Created on Mon Jan 25 16:41:57 2021
 import os
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.stats import norm
+import scipy.stats
 
-from GaussQual_io import *
+import gaussquality_io
 
 
 def plot_GMM(img, mu_fitted, sigma_fitted, phi_fitted, plot_title=None,
@@ -73,7 +73,7 @@ def plot_GMM(img, mu_fitted, sigma_fitted, phi_fitted, plot_title=None,
     gaussian_xs = np.linspace(min(hist[1]), max(hist[1]))
     gaussian_ys = np.zeros((len(gaussian_xs), len(mu_fitted)))
     for i in range(len(mu_fitted)):
-        gaussian_y = norm.pdf(gaussian_xs, mu_fitted[i], sigma_fitted[i])
+        gaussian_y = scipy.stats.norm.pdf(gaussian_xs, mu_fitted[i], sigma_fitted[i])
         gaussian_ys[:, i] = gaussian_y * phi_fitted[i]
         if material_names is None:
             plt.plot(gaussian_xs, gaussian_y * phi_fitted[i], label="Gaussian {}".format(i))
@@ -181,11 +181,11 @@ def plot_img_and_histo(img_filepath, mask_percentage,
     
     plt.figure(figsize=(8,4))
     plt.subplot(121)
-    img = load_img(img_filepath,
-                   mask_percentage=mask_percentage,
-                   show_image=True,
-                   vmin=vmin,
-                   vmax=vmax)
+    img = gaussquality_io.load_img(img_filepath,
+                                   mask_percentage=mask_percentage,
+                                   show_image=True,
+                                   vmin=vmin,
+                                   vmax=vmax)
     plt.subplot(122)
     mu_fitted, sigma_fitted, phi_fitted = fitted_results
     plot_GMM(img, 
@@ -216,14 +216,14 @@ def vis_slices(n_runs, z_percentage, mask_xy, img_dir):
     """
     
     # Get z
-    n_slices = get_nslices(img_dir)
+    n_slices = gaussquality_io.get_nslices(img_dir)
     n_slices_cropped = int(n_slices * z_percentage/100)
     central_slice = int(n_slices/2)
     z_plot = np.linspace(int(central_slice - n_slices_cropped/2), int(central_slice + n_slices_cropped/2), n_runs)
 
     # Get xy
-    slice_filepath = get_img_filepath(img_dir, 1)
-    slice1 = load_img(slice_filepath)
+    slice_filepath = gaussquality_io.get_img_filepath(img_dir, 1)
+    slice1 = gaussquality_io.load_img(slice_filepath)
     xy_dims = slice1.shape
 
     masked_x, masked_y = (int(xy_dims[0]*mask_xy/100), int(xy_dims[1]*mask_xy/100))
