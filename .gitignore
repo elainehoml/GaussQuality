@@ -1,6 +1,4 @@
-/__pycache__/*
-test/example_images/3D_/*.json
-test/example_images/3D_/*.png
-*.pyc
-test/example_images/3D_/results/
-*trial.py
+__pycache__/
+test/__pycache__/
+gaussquality/__pycache__/
+test/3D_/results/
