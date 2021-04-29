@@ -1,0 +1,12 @@
+{
+  "base_url": "/",
+  "hostname": "localhost",
+  "notebook_dir": "C:\\Users\\emlh1n13\\OneDrive - University of Southampton\\Demo\\FEEG1001\\bezier\\lab1",
+  "password": false,
+  "pid": 20388,
+  "port": 8889,
+  "secure": false,
+  "sock": "",
+  "token": "677ec61f292ff64f2028eaddb82e43d08d429fc4b2f45aea",
+  "url": "http://localhost:8889/"
+}
