@@ -7,7 +7,8 @@ Created on Mon Jan 25 14:50:04 2021
 @author: elainehoml
 """
 
-import os, json
+import os
+import json
 import pandas as pd
 import matplotlib.pyplot as plt
 import skimage.io
@@ -140,7 +141,7 @@ def load_img(img_filepath, show_image=False, mask_percentage=100., vmin=None, vm
     return masked_img
 
 
-def save_GMM_single_results(fitted_results, img_dir, prefix, SNR=None, CNR=None):
+def save_GMM_single_results(fitted_results, save_dir, prefix, SNR=None, CNR=None):
     """
     Saves average fitted Gaussian properties across the stack.
 
@@ -149,10 +150,10 @@ def save_GMM_single_results(fitted_results, img_dir, prefix, SNR=None, CNR=None)
     fitted_results : list
         List containing fitted Gaussian properties `mu`, `sigma` and `phi`
         averaged across the stack.
-    img_dir : str, path-like
-        Directory to image.
+    save_dir : str, path-like
+        Directory to savepath.
     prefix : str
-        Name of the image.
+        Prefix to filename
     SNR : dict, optional.
         SNR. Default is None.
     CNR : dict, optional.
@@ -163,9 +164,7 @@ def save_GMM_single_results(fitted_results, img_dir, prefix, SNR=None, CNR=None)
     None.
 
     """
-    if os.path.isdir(os.path.join(img_dir, "results")) is False:
-        os.path.mkdir(os.path.join(img_dir, "results"))
-    save_single_filename = os.path.join(img_dir, "results", prefix + "_GMM_results.json")
+    save_single_filename = os.path.join(save_dir, prefix + "_GMM_results.json")
 
     # unpack results
     mu_mean, sigma_mean, phi_mean = fitted_results
@@ -187,7 +186,7 @@ def save_GMM_single_results(fitted_results, img_dir, prefix, SNR=None, CNR=None)
         json.dump(dict_to_write, outfile, indent=4)
 
 
-def save_GMM_slice_results(iter_results, img_dir, img_name):
+def save_GMM_slice_results(iter_results, save_dir, prefix):
     """
     Saves fitted Gaussian properties for each individual 2-D image considered
     from a 3-D image sequence
@@ -196,29 +195,22 @@ def save_GMM_slice_results(iter_results, img_dir, img_name):
     ----------
     iter_results : list
         List of fitted `mu`, `sigma` and `phi` Gaussian properties.
-    img_dir : str, path-like
-        Directory to image.
-    img_name : str
-        Name of the image.
+    save_dir : str, path-like
+        Directory to save results.
+    prefix : str
+        Prefix to save results filename.
 
     Returns
     -------
     None.
 
     """
-    if os.path.isdir(os.path.join(img_dir, "results")) is False:
-        os.path.mkdir(os.path.join(img_dir, "results"))
     parameters = ["mu", "sigma", "phi"]
     for parameter in range(len(parameters)):
-        save_filename = os.path.join(img_dir, "results",
-                                     "{}_{}_{}_GMM_slice_results.json".format(img_name,
-                                     parameters[parameter],
-                                     datetime.datetime.now().strftime("%Y%m%d_%H%M")))
+        save_filename = os.path.join(save_dir,
+                                     "{}_{}_GMM_slice_results.json".format(prefix,
+                                     parameters[parameter]))
         pd.DataFrame(iter_results[parameter]).to_json(save_filename, indent=4)
-        print("Stack {} saved to {}".format(
-            parameters[parameter],
-            save_filename
-        ))
 
 
 def save_SNR_CNR_stack(SNRs, CNRs, img_dir, img_name):
