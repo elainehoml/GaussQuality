@@ -7,6 +7,8 @@ from tkinter import filedialog
 from tkinter import ttk
 from ttkthemes import ThemedTk
 import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
 
 import gaussquality_io
 import gaussquality_fitting
@@ -23,6 +25,8 @@ class gaussquality_gui(tk.Frame):
         self.create_widgets()
         self.material_names = None
         self.thresholds = None
+        self.snr_cnr_bg = None
+        self.snr_cnr_feature = None
     
     def create_widgets(self):
         
@@ -169,8 +173,37 @@ class gaussquality_gui(tk.Frame):
         ttk.Label(self.root,
                   image=self.slice_var_icon
                   ).grid(row=17, column=2, columnspan=2)
-
-
+        
+        # SNR and CNR calculation
+        ttk.Label(self.root,
+                  text="Step 4: SNR and CNR Calculation",
+                  font=(None, 12, "bold")
+                  ).grid(row=18, column=0, columnspan=3, sticky="NWES", ipadx=10, ipady=10)
+        self.background_mat = tk.IntVar()
+        self.feature_mat = tk.IntVar()
+        ttk.Label(self.root,
+                  text="Background Material"
+                 ).grid(row=19, column=2, sticky="W")
+        ttk.Label(self.root,
+                  text="Feature Material"
+                 ).grid(row=19, column=3, sticky="W")
+        ttk.Label(self.root, 
+                 text="Material Gaussian numbers for calculating SNR and CNR"
+                 ).grid(row=20, column=0, columnspan=2, sticky="NWES")
+        ttk.Entry(self.root,
+                  textvariable=self.background_mat
+                  ).grid(row=20, column=2, sticky="NWS")
+        ttk.Entry(self.root,
+                  textvariable=self.feature_mat
+                  ).grid(row=20, column=3, sticky="NWS")
+        ttk.Button(self.root,
+                   text="Update materials", 
+                   command=self.update_materials
+                   ).grid(row=20, column=4, sticky="NWES")
+        ttk.Button(self.root,
+                   text="Calculate SNR and CNR",
+                   command=self.calc_snr_cnr
+                   ).grid(row=21, column=0, columnspan=2, sticky="NWES", ipadx=10, ipady=10)
         
 
     def get_img_dir(self):
@@ -249,27 +282,27 @@ class gaussquality_gui(tk.Frame):
         print("Input arguments saved to {}".format(args_outfile))
 
         # save stack results
-        stack_prefix = "{}_{}".format(
+        self.time_prefix = "{}_{}".format(
             self.prefix.get(),
             datetime.datetime.now().strftime("%Y%m%d_%H%M"))
         gaussquality_io.save_GMM_single_results(
             self.stack_results,
             self.save_dir,
-            stack_prefix
+            self.time_prefix
         )
         print("Average stack results saved to {}/{}_GMM_results.json".format(
             self.save_dir,
-            stack_prefix
+            self.time_prefix
         ))
 
         # save slice results
         gaussquality_io.save_GMM_slice_results(
             self.slice_results,
             self.save_dir,
-            stack_prefix)
+            self.time_prefix)
         print("Slice-by-slice results saved to {}/{}_GMM_results.json".format(
             self.save_dir,
-            stack_prefix))
+            self.time_prefix))
 
     def plot_image_and_histo(self):
         central_slice = int(0.5*gaussquality_io.get_nslices(self.img_dir))
@@ -295,6 +328,40 @@ class gaussquality_gui(tk.Frame):
         mat_names = self.material_names_entry.get().split(",")
         self.material_names = mat_names
         print("Material names are {}".format(self.material_names))
+    
+    def update_materials(self):
+        self.snr_cnr_bg = self.background_mat.get()
+        self.snr_cnr_feature = self.feature_mat.get()
+        print("Background material is Gaussian {}, feature material is Gaussian {}".format(self.snr_cnr_bg, self.snr_cnr_feature))
+    
+    def calc_snr_cnr(self):
+        self.snr = gaussquality_calc.calc_snr_stack(self.slice_results,
+                                                    self.snr_cnr_bg, 
+                                                    self.snr_cnr_feature)
+        self.cnr = gaussquality_calc.calc_cnr_stack(self.slice_results, 
+                                                    self.snr_cnr_bg, 
+                                                    self.snr_cnr_feature)
+        snr_cnr_array = np.zeros((len(self.snr), 3))
+        snr_cnr_array[:,0] = list(self.snr.keys())
+        snr_cnr_array[:,1] = list(self.snr.values())
+        snr_cnr_array[:,2] = list(self.cnr.values())
+        snr_cnr_df = pd.DataFrame(snr_cnr_array,
+                                  columns=["Slice", "SNR", "CNR"])
+        # self.snr = {int(k):float(v) for k, v in self.snr.items()}
+        # save snr and cnr
+        snr_cnr_outfile = os.path.join(self.save_dir,
+                                       "{}_BG{}-F{}_snr_cnr.csv".format(
+                                       self.time_prefix,
+                                       self.snr_cnr_bg,
+                                       self.snr_cnr_feature 
+                                       ))
+        # with open(snr_cnr_outfile, "w") as outfile:
+        #     json.dump(self.snr, outfile, indent=4)
+
+        pd.DataFrame(snr_cnr_df).to_csv(snr_cnr_outfile, index=False)
+        print("Slice-by-slice SNR and CNR saved to {}/{}_GMM_results.json".format(
+            self.save_dir,
+            self.time_prefix))
 
 class StdoutRedirector(object):
     def __init__(self, text_area):

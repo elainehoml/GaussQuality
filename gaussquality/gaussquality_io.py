@@ -213,12 +213,12 @@ def save_GMM_slice_results(iter_results, save_dir, prefix):
         pd.DataFrame(iter_results[parameter]).to_json(save_filename, indent=4)
 
 
-def save_SNR_CNR_stack(SNRs, CNRs, img_dir, img_name):
+def save_SNR_CNR_stack(SNRs, CNRs, save_dir, prefix):
+    # deprecated
     dict_to_write = {"SNR": SNRs, "CNR": CNRs}
     snr_cnr_outfile = os.path.join(
-        img_dir,
-        "results",
-        "{}_{}_snr_cnr.json".format(img_name, datetime.datetime.now().strftime("%Y%m%d_%H%M"),))
+        save_dir,
+        "{}_snr_cnr.json".format(prefix))
     with open(snr_cnr_outfile, "w") as outfile:
         json.dump(dict_to_write, outfile, indent=4)
     print("SNR and CNR saved as {}".format(snr_cnr_outfile))
