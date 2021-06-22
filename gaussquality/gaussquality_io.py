@@ -208,9 +208,10 @@ def save_GMM_slice_results(iter_results, save_dir, prefix):
     parameters = ["mu", "sigma", "phi"]
     for parameter in range(len(parameters)):
         save_filename = os.path.join(save_dir,
-                                     "{}_{}_GMM_slice_results.json".format(prefix,
+                                     "{}_{}_GMM_slice_results.csv".format(prefix,
                                      parameters[parameter]))
-        pd.DataFrame(iter_results[parameter]).to_json(save_filename, indent=4)
+        # pd.DataFrame(iter_results[parameter]).to_json(save_filename, indent=4)
+        pd.DataFrame(iter_results[parameter]).transpose().to_csv(save_filename)
 
 
 def save_SNR_CNR_stack(SNRs, CNRs, save_dir, prefix):

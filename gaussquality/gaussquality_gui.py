@@ -300,7 +300,7 @@ class gaussquality_gui(tk.Frame):
             self.slice_results,
             self.save_dir,
             self.time_prefix)
-        print("Slice-by-slice results saved to {}/{}_GMM_results.json".format(
+        print("Slice-by-slice results saved to {}/{}_GMM_slice_results.csv".format(
             self.save_dir,
             self.time_prefix))
 
@@ -347,7 +347,6 @@ class gaussquality_gui(tk.Frame):
         snr_cnr_array[:,2] = list(self.cnr.values())
         snr_cnr_df = pd.DataFrame(snr_cnr_array,
                                   columns=["Slice", "SNR", "CNR"])
-        # self.snr = {int(k):float(v) for k, v in self.snr.items()}
         # save snr and cnr
         snr_cnr_outfile = os.path.join(self.save_dir,
                                        "{}_BG{}-F{}_snr_cnr.csv".format(
@@ -355,13 +354,9 @@ class gaussquality_gui(tk.Frame):
                                        self.snr_cnr_bg,
                                        self.snr_cnr_feature 
                                        ))
-        # with open(snr_cnr_outfile, "w") as outfile:
-        #     json.dump(self.snr, outfile, indent=4)
-
         pd.DataFrame(snr_cnr_df).to_csv(snr_cnr_outfile, index=False)
-        print("Slice-by-slice SNR and CNR saved to {}/{}_GMM_results.json".format(
-            self.save_dir,
-            self.time_prefix))
+        print("Slice-by-slice SNR and CNR saved to {}".format(
+            snr_cnr_outfile))
 
 class StdoutRedirector(object):
     def __init__(self, text_area):
