@@ -1,8 +1,3 @@
-# GaussQuality
-Gaussian Mixture Model image quality assessment for X-ray micro-computed tomography images
-
----
-
 This is a tool that fits [Gaussian Mixture Models](https://scikit-learn.org/stable/modules/mixture.html) to grey value distributions from X-ray micro-computed tomography images. This tool was developed as part of a PhD project at the [University of Southampton](https://www.southampton.ac.uk/) in the [3-D X-ray histology team](https://www.southampton.ac.uk/muvis/xrh/xrh-intro.page).
 
 ---
@@ -21,19 +16,30 @@ GaussQuality fits a 1-D Gaussian Mixture Model (GMM) to the grey value distribut
 
 ---
 
-## Usage
-
-### GUI
-
-### Python library
-
----
-
 ## Installation
 
 ### GUI
 
+Download the .exe for Windows or .app for MacOS. 
+
+Simply double click the executable and the GUI should start. If you have any trouble, try opening the executable in a terminal to debug any errors.
+
+![GaussQuality GUI](gq_gui.JPG)
+
 ### Python library
+
+GaussQuality is available on ```conda```. In the terminal:
+
+```
+conda activate <myenv>
+conda install gaussquality
+```
+
+---
+
+## Example usage
+
+See GaussQuality_Example.ipynb for a demo, and explanation of what each parameter controls.
 
 ---
 
