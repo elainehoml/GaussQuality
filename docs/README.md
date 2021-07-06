@@ -39,7 +39,7 @@ conda install gaussquality
 
 ## Example usage
 
-See GaussQuality_Example.ipynb for a demo, and explanation of what each parameter controls.
+See [GaussQuality_Example.ipynb](https://nbviewer.jupyter.org/github/elainehoml/GaussQuality/blob/main/GaussQuality_Example.ipynb) for a demo, and explanation of what each parameter controls.
 
 ---
 
