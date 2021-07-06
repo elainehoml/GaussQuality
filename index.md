@@ -1,37 +1,42 @@
-## Welcome to GitHub Pages
+# GaussQuality
+Gaussian Mixture Model image quality assessment for X-ray micro-computed tomography images
 
-You can use the [editor on GitHub](https://github.com/elainehoml/GaussQuality/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+---
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+This is a tool that fits [Gaussian Mixture Models](https://scikit-learn.org/stable/modules/mixture.html) to grey value distributions from X-ray micro-computed tomography images. This tool was developed as part of a PhD project at the [University of Southampton](https://www.southampton.ac.uk/) in the [3-D X-ray histology team](https://www.southampton.ac.uk/muvis/xrh/xrh-intro.page).
 
-### Markdown
+---
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## How it works
 
-```markdown
-Syntax highlighted code block
+GaussQuality fits a 1-D Gaussian Mixture Model (GMM) to the grey value distribution of a 2D X-ray micro-computed tomography (&mu;CT) image. The GMM fits a specified number of Gaussian components to the grey value distribution, where each component represents the distribution of grey values for a single material in the specimen. The mean (&mu;), standard deviation (&sigma;), and weight (&phi;) of each Gaussian component are estimated.
 
-# Header 1
-## Header 2
-### Header 3
+* &mu; is the location of the Gaussian along the grey value axis, dependent on X-ray interactions with the material
+* &sigma; is its spread which is dependent on heterogeneity of the material and image noise
+* &phi; is the proportion of the image taken up by this material
 
-- Bulleted
-- List
+&mu; and &sigma; can be used to calculate signal-to-noise ratio (SNR) and contrast-to-noise ratio (CNR).
 
-1. Numbered
-2. List
+&mu;, &sigma;, and &phi; can be estimated for several 2D images in a 3D stack, showing how the image varies in 3D. Only one 2D image is held in memory at once, so images larger than memory can be processed. 3D images must be saved as sequences of 2D images.
 
-**Bold** and _Italic_ and `Code` text
+---
 
-[Link](url) and ![Image](src)
-```
+## Usage
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+### GUI
 
-### Jekyll Themes
+### Python library
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/elainehoml/GaussQuality/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+---
 
-### Support or Contact
+## Installation
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+### GUI
+
+### Python library
+
+---
+
+## Citation
+
+
