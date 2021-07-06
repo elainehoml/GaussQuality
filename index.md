@@ -45,4 +45,8 @@ See GaussQuality_Example.ipynb for a demo, and explanation of what each paramete
 
 ## Citation
 
+---
 
+## API Docs
+
+The [API docs are available here](gaussquality.html).
