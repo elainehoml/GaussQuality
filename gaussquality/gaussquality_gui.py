@@ -11,10 +11,10 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
-import gaussquality_io
-import gaussquality_fitting
-import gaussquality_calc
-import gaussquality_visuals
+from gaussquality import gaussquality_io
+from gaussquality import gaussquality_fitting
+from gaussquality import gaussquality_calc
+from gaussquality import gaussquality_visuals
 
 class gaussquality_gui(tk.Frame):
 

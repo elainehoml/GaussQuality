@@ -11,7 +11,7 @@ import time
 import numpy as np
 import sklearn.mixture
 
-import gaussquality_io
+from gaussquality import gaussquality_io
 
 
 def fit_GMM(img, n_components, mu_init=None, threshold=None):
