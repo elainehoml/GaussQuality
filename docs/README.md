@@ -31,8 +31,7 @@ Simply double click the executable and the GUI should start. If you have any tro
 GaussQuality is available on ```conda```. In the terminal:
 
 ```
-conda activate <myenv>
-conda install gaussquality
+conda install -c elainehoml gaussquality
 ```
 
 ---
