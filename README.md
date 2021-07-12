@@ -28,11 +28,20 @@ Simply double click the executable and the GUI should start. If you have any tro
 
 ### Python library
 
+
 GaussQuality is available on ```conda```. In the terminal:
 
 ```
 conda install -c elainehoml gaussquality
 ```
+
+Alternatively, you can install GaussQuality with ```pip```. In the terminal:
+
+```
+pip install gaussquality
+```
+
+It's best to install GaussQuality into a fresh [virtual environment](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) to avoid conflicts with other projects you may have. 
 
 ---
 
