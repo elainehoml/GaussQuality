@@ -7,10 +7,10 @@ import skimage.io
 test_dir = os.path.dirname(os.path.abspath(__file__))
 base_dir = os.path.dirname(test_dir)
 gaussquality_dir = os.path.join(base_dir, "gaussquality")
-sys.path.append(gaussquality_dir)
+# sys.path.append(gaussquality_dir)
 img_dir = os.path.join(test_dir, "example_images", "3D_")
 
-import gaussquality_io
+from gaussquality import gaussquality_io
 
 def test_get_img_list():
     """

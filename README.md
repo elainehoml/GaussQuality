@@ -28,6 +28,7 @@ Simply double click the executable and the GUI should start. If you have any tro
 
 ### Python library
 
+
 GaussQuality is available on ```conda```. In the terminal:
 
 ```

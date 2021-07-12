@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.stats
 
-import gaussquality_io
+from gaussquality import gaussquality_io
 
 
 def plot_GMM(img, mu_fitted, sigma_fitted, phi_fitted, plot_title=None,
