@@ -18,13 +18,6 @@ GaussQuality fits a 1-D Gaussian Mixture Model (GMM) to the grey value distribut
 
 ## Installation
 
-### GUI
-
-Download the .exe for Windows or .app for MacOS. 
-
-Simply double click the executable and the GUI should start. If you have any trouble, try opening the executable in a terminal to debug any errors.
-
-![GaussQuality GUI](gq_gui.JPG)
 
 ### Python library
 
