@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="gaussquality",
-    version="0.0.2",
+    version="1.0.0",
     author="Elaine Ho",
     author_email="mselaineho@gmail.com",
     description="Image quality assessment with Gaussian Mixture Models",
@@ -22,15 +22,15 @@ setuptools.setup(
     ],
     packages=["gaussquality"],
     install_requires=[
-       "gaussquality",
        "numpy",
        "scipy",
        "pandas",
-       "matplotlib==3.4.2",
-       "tk",
-       "ttkthemes",
+       "matplotlib",
        "scikit-image",
        "scikit-learn",
-       "pytest",
-   ]
+   ],
+   extras_require={
+        "test": ["unittest", "coverage"]
+   }
+   
 )
