@@ -18,16 +18,6 @@ GaussQuality fits a 1-D Gaussian Mixture Model (GMM) to the grey value distribut
 
 ## Installation
 
-### GUI
-
-Download the .exe for Windows or .app for MacOS. 
-
-Simply double click the executable and the GUI should start. If you have any trouble, try opening the executable in a terminal to debug any errors.
-
-![GaussQuality GUI](gq_gui.JPG)
-
-### Python library
-
 
 GaussQuality is available on ```conda```. In the terminal:
 
@@ -39,6 +29,13 @@ Alternatively, you can install GaussQuality with ```pip```. In the terminal:
 
 ```
 pip install gaussquality
+```
+
+GaussQuality can also be installed from source by the following commands:
+```
+git clone https://github.com/elainehoml/GaussQuality.git
+cd GaussQuality
+pip install -e .
 ```
 
 It's best to install GaussQuality into a fresh [virtual environment](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) to avoid conflicts with other projects you may have. 
